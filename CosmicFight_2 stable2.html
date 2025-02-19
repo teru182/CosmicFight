@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cosmin Fight!</title>
+  <style>
+    /* ページ全体の余白をなくして、背景を黒にする */
+    body { margin: 0; overflow: hidden; background: black; }
+    /* canvasもブロック表示にして、背景を黒にする */
+    canvas { display: block; background: black; }
+  </style>
+</head>
+<body>
+  <!-- ゲーム描画用のキャンバス -->
+  <canvas id="gameCanvas"></canvas>
+  <script>
+    // --- キャンバスの初期設定 ---
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    // 画面のサイズに合わせる
+    let WIDTH = window.innerWidth;  // 画面の幅
+    let HEIGHT = window.innerHeight; // 画面の高さ
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    // ウィンドウサイズが変わったらキャンバスサイズも再設定する
+    window.addEventListener("resize", () => {
+      WIDTH = window.innerWidth;
+      HEIGHT = window.innerHeight;
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+      // プレイヤーの移動範囲も再計算
+      minPlayerY = HEIGHT * 0.5;
+      maxPlayerY = HEIGHT - player.height;
+    });
+
+    // --- ユーティリティ関数 ---
+    // ランダムな16進数カラーを生成する関数
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      // 6桁の16進数カラーをランダムに作る
+      for(let i = 0; i < 6; i++){
+        color += letters[Math.floor(Math.random()*16)];
+      }
+      return color;
+    }
+
+    // --- ゲームの状態管理 ---
+    // ゲーム状態："demo"（デモモード）、"playing"（プレイ中）、"gameover"（ゲームオーバー）
+    let gameState = "demo";
+    let gameOverTimer = 0;  // ゲームオーバー後にdemoに戻すためのタイマー
+
+    // キーボードの入力状態を保持するオブジェクト
+    let keys = {};
+    let canShoot = true; // ミサイル発射可能かどうか
+
+    // --- キーボード操作 ---
+    // キーを押したときのイベント
+    document.addEventListener("keydown", (e) => {
+      keys[e.code] = true; // キーを記録
+      // demoモードでスペースキーが押されたらゲーム開始
+      if(gameState === "demo" && e.code === "Space"){
+        resetGame();
+        gameState = "playing";
+      }
+    });
+    // キーを離したときのイベント
+    document.addEventListener("keyup", (e) => {
+      keys[e.code] = false;
+      // スペースキーを離すと再度発射できるようにする
+      if(e.code === "Space"){
+        canShoot = true;
+      }
+    });
+
+    // --- タッチ操作用変数 ---
+    let touchStartX = null, touchStartY = null;
+    let isSwiping = false; // タッチ中にスワイプしているかどうか
+    let swipeTrail = [];  // タッチ移動時の軌跡を保持する配列
+
+    // タッチ開始時の処理
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      // demoモードならタッチでゲーム開始
+      if(gameState === "demo"){
+        resetGame();
+        gameState = "playing";
+      }
+    });
+    // タッチ移動中の処理
+    canvas.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      isSwiping = true;
+      // 軌跡にタッチ位置を追加
+      swipeTrail.push({ x: touch.clientX, y: touch.clientY });
+      // タッチ中はプレイヤーの移動目標（ターゲット）を更新する
+      player.targetX = touch.clientX - player.width/2;
+      player.targetY = touch.clientY - player.height/2;
+    });
+    // タッチ終了時の処理
+    canvas.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      if(isSwiping && swipeTrail.length > 0) {
+        // 最後にタッチした位置をプレイヤーのターゲット座標に設定
+        const lastPoint = swipeTrail[swipeTrail.length - 1];
+        player.targetX = lastPoint.x - player.width/2;
+        player.targetY = lastPoint.y - player.height/2;
+      } else {
+        // スワイプがなかった場合、発射処理を実行
+        if(canShoot) {
+          missiles.push({
+            x: player.x + player.width/2 - 2.5,
+            y: player.y,
+            width: 5,
+            height: 10,
+            speed: 7
+          });
+          canShoot = false;
+        }
+      }
+      // 軌跡とフラグのリセット
+      swipeTrail = [];
+      isSwiping = false;
+      touchStartX = null;
+      touchStartY = null;
+      canShoot = true;
+    });
+
+    // --- ゲーム内変数 ---
+    let score = 0;        // スコア
+    let stage = 1;        // ステージ数
+    let timer = 30;       // 制限時間（秒）
+    let timerAccumulator = 0; // ミリ秒単位の時間蓄積
+
+    // ステージクリア関連のフラグと一時停止時間
+    let paused = false;
+    let stageCleared = false;
+    let pauseTimeRemaining = 0; // ステージ間の一時停止時間（ミリ秒）
+
+    // 敵の難易度調整用の倍率
+    let enemyBulletIntervalMultiplier = 1.0;
+    let enemyRotationMultiplier = 1.0;
+
+    // --- プレイヤー設定 ---
+    // 戦闘機風のプレイヤー（サイズ：60×45）で、移動ターゲットも持つ
+    const player = {
+      x: WIDTH/2 - 30, // 初期位置（横中央）
+      y: HEIGHT - 70,   // 初期位置（画面下部）
+      width: 60,
+      height: 45,
+      speed: 5,
+      life: 3,         // ライフ3
+      targetX: WIDTH/2 - 30, // 目標位置（最初は現在位置）
+      targetY: HEIGHT - 70
+    };
+    let minPlayerY = HEIGHT * 0.5;       // プレイヤーが動ける最小Y座標
+    let maxPlayerY = HEIGHT - player.height; // プレイヤーが動ける最大Y座標
+    // プレイヤーのライフに応じた色を返す関数
+    function getPlayerColor() {
+      if(player.life === 3) return "green";
+      if(player.life === 2) return "yellow";
+      if(player.life === 1) return "red";
+      return "white";
+    }
+
+    // --- 各種オブジェクト群 ---
+    let missiles = [];      // プレイヤーが発射するミサイル
+    let enemies = [];       // 敵オブジェクト
+    let enemyBullets = [];  // 敵が発射する弾丸
+    let explosions = [];    // 爆発エフェクト用のオブジェクト
+    let stars = [];         // 背景の星オブジェクト
+    // 星を100個生成して背景に配置
+    for(let i = 0; i < 100; i++){
+      stars.push({
+        x: Math.random()*WIDTH,
+        y: Math.random()*HEIGHT,
+        radius: Math.random()*1.5+0.5,  // 星のサイズ
+        speed: Math.random()*0.5+0.2,     // 星の落下速度
+        color: getRandomColor()           // ランダムな色
+      });
+    }
+
+    // --- 敵の出現管理 ---
+    let enemySpawnTimer = 0;
+    let enemySpawnInterval = 2000; // 敵が出現する間隔（ミリ秒）
+
+    // --- 爆発エフェクトの定義 ---
+    // 爆発エフェクトを表すコンストラクタ
+    function Explosion(x, y) {
+      this.x = x;
+      this.y = y;
+      this.particles = []; // 爆発を構成するパーティクルの集合
+      this.done = false;   // 全パーティクルが消えたかどうか
+      // 20個のパーティクルを生成
+      for(let i = 0; i < 20; i++){
+        let angle = Math.random()*Math.PI*2; // ランダムな方向
+        let speed = Math.random()*3+2;         // ランダムな速度
+        this.particles.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle)*speed,  // X方向の速度
+          vy: Math.sin(angle)*speed,  // Y方向の速度
+          radius: Math.random()*2+1,    // パーティクルのサイズ
+          life: 1000,                 // 寿命（ミリ秒）
+          alpha: 1                    // 初期の不透明度
+        });
+      }
+    }
+    // 爆発エフェクトの更新処理
+    Explosion.prototype.update = function(dt) {
+      this.particles.forEach(p => {
+        p.x += p.vx;       // 位置更新
+        p.y += p.vy;
+        p.life -= dt;      // 寿命を減らす
+        p.alpha = p.life/1000;  // 残り寿命に応じて透明度を下げる
+      });
+      // 寿命がなくなったパーティクルは配列から除外
+      this.particles = this.particles.filter(p => p.life > 0);
+      if(this.particles.length === 0){ this.done = true; }
+    };
+    // 爆発エフェクトの描画処理
+    Explosion.prototype.draw = function(ctx) {
+      ctx.save();
+      this.particles.forEach(p => {
+        ctx.globalAlpha = p.alpha;  // 透明度を設定
+        ctx.fillStyle = "orange";     // 色はオレンジ
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fill();
+      });
+      ctx.restore();
+    };
+    // 指定位置で爆発エフェクトを作成して explosions 配列に追加
+    function createExplosion(x, y) {
+      explosions.push(new Explosion(x, y));
+    }
+
+    // --- 敵の描画 ---
+    // 敵を回転する三角形として描画する関数
+    function drawTriangle(x, y, size, angle) {
+      ctx.save();
+      // 敵の中心に移動
+      ctx.translate(x + size/2, y + size/2);
+      ctx.rotate(angle);  // 回転させる
+      ctx.beginPath();
+      ctx.moveTo(0, -size/2);         // 上の頂点
+      ctx.lineTo(-size/2, size/2);      // 左下の頂点
+      ctx.lineTo(size/2, size/2);       // 右下の頂点
+      ctx.closePath();
+      ctx.fillStyle = "#555";
+      ctx.fill();
+      ctx.strokeStyle = "black";
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // --- プレイヤーの描画 ---
+    // 戦闘機風のプレイヤーを描画する関数
+    function drawFighter(x, y, width, height) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.fillStyle = getPlayerColor();  // プレイヤーのライフに応じた色で塗る
+      ctx.beginPath();
+      // 戦闘機の形を多角形で定義
+      ctx.moveTo(width*0.5, 0);
+      ctx.lineTo(width, height*0.5);
+      ctx.lineTo(width*0.7, height*0.5);
+      ctx.lineTo(width*0.8, height);
+      ctx.lineTo(width*0.5, height*0.8);
+      ctx.lineTo(width*0.2, height);
+      ctx.lineTo(width*0.3, height*0.5);
+      ctx.lineTo(0, height*0.5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = "black";
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // --- 敵とプレイヤーの位置関係チェック ---
+    // プレイヤーの中心X座標と敵の中心X座標が20px以内ならtrueを返す
+    function isEnemyAligned() {
+      const playerCenterX = player.x + player.width/2;
+      for(let i = 0; i < enemies.length; i++){
+        const enemyCenterX = enemies[i].x + enemies[i].size/2;
+        if(Math.abs(enemyCenterX - playerCenterX) < 20){
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // --- 照準マークの描画 ---
+    // 照準は通常白で描画、敵がプレイヤーの中心Xに近い場合は100msごとに赤く点滅
+    function drawReticle() {
+      const reticleCenterX = player.x + player.width/2;
+      const reticleCenterY = player.y + player.height/2 - 200; // プレイヤーの上方200pxに配置
+      let color = "white";  // 通常は白
+      if(isEnemyAligned()){
+        // 100msごとに赤色と非表示を切り替える
+        if(Math.floor(Date.now() / 100) % 2 === 0){
+          color = "red";  // 表示タイミングは赤
+        } else {
+          return; // 非表示タイミングは何も描画しない
+        }
+      }
+      ctx.save();
+      ctx.setLineDash([5,5]); // 点線パターンを設定
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = color;
+      // 円形の照準を描画
+      ctx.beginPath();
+      ctx.arc(reticleCenterX, reticleCenterY, 30, 0, Math.PI*2);
+      ctx.stroke();
+      // 横の点線
+      ctx.beginPath();
+      ctx.moveTo(reticleCenterX - 30, reticleCenterY);
+      ctx.lineTo(reticleCenterX + 30, reticleCenterY);
+      ctx.stroke();
+      // 縦の点線
+      ctx.beginPath();
+      ctx.moveTo(reticleCenterX, reticleCenterY - 30);
+      ctx.lineTo(reticleCenterX, reticleCenterY + 30);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+
+    // --- demoモード用変数 ---
+    let demoDirection = 1;  // プレイヤーの自動移動の方向（左右）
+    let demoFireTimer = 0;  // 自動射撃用タイマー
+
+    // --- ゲームリセット ---
+    // ゲームの状態やオブジェクトを初期状態に戻す関数
+    function resetGame() {
+      score = 0;
+      stage = 1;
+      timer = 30;
+      timerAccumulator = 0;
+      paused = false;
+      stageCleared = false;
+      enemySpawnTimer = 0;
+      enemySpawnInterval = 2000;
+      enemyBulletIntervalMultiplier = 1.0;
+      enemyRotationMultiplier = 1.0;
+      // プレイヤーの位置とライフを初期化
+      player.x = WIDTH/2 - player.width/2;
+      player.y = HEIGHT - 70;
+      player.targetX = player.x;
+      player.targetY = player.y;
+      player.life = 3;
+      missiles = [];
+      enemies = [];
+      enemyBullets = [];
+      explosions = [];
+    }
+
+    // --- メインゲームループ ---
+    let lastTime = 0;
+    function gameLoop(timestamp) {
+      let dt = timestamp - lastTime; // 前フレームからの経過時間（ミリ秒）
+      lastTime = timestamp;
+      // ゲーム状態に応じた更新処理を実行
+      if(gameState==="demo"){
+        updateDemo(dt);
+      } else if(gameState==="playing"){
+        updatePlaying(dt);
+      } else if(gameState==="gameover"){
+        updateGameOver(dt);
+      }
+      draw();  // 画面描画
+      requestAnimationFrame(gameLoop); // 次のフレームを要求
+    }
+    requestAnimationFrame(gameLoop);
+
+    // --- demoモードの更新 ---
+    // 自動でプレイヤーを移動させ、定期的にミサイル発射する
+    function updateDemo(dt) {
+      // 画面端に到達したら移動方向を反転
+      if(player.x <= 0) { demoDirection = 1; }
+      else if(player.x >= WIDTH - player.width) { demoDirection = -1; }
+      player.x += player.speed * demoDirection;  // 横方向に自動移動
+      player.y = HEIGHT - 70; // 縦位置は固定
+      player.targetX = player.x;
+      player.targetY = player.y;
+      demoFireTimer += dt;
+      // 500msごとにミサイル発射
+      if(demoFireTimer >= 500) {
+        missiles.push({
+          x: player.x + player.width/2 - 2.5,
+          y: player.y,
+          width: 5,
+          height: 10,
+          speed: 7
+        });
+        demoFireTimer = 0;
+      }
+      updateCommon(dt);
+    }
+
+    // --- プレイ中の更新 ---
+    // ユーザー入力に基づいてプレイヤーを操作し、各種オブジェクトを更新する
+    function updatePlaying(dt) {
+      if(paused) {
+        pauseTimeRemaining -= dt;
+        if(pauseTimeRemaining <= 0 && stageCleared) {
+          stage++;
+          // ステージごとに難易度を調整
+          if(stage > 1 && stage % 10 === 1) {
+            enemyRotationMultiplier = 1.0;
+            enemyBulletIntervalMultiplier = 1.0;
+            enemySpawnInterval = 2000;
+          } else {
+            enemyRotationMultiplier *= 1.2;
+            enemyBulletIntervalMultiplier *= 0.9;
+            enemySpawnInterval = Math.max(500, 2000 - (stage - 1)*200);
+          }
+          timer = 30;
+          timerAccumulator = 0;
+          stageCleared = false;
+          paused = false;
+        }
+        return;
+      }
+      // キー入力に応じてプレイヤーの位置を更新
+      if(keys["ArrowLeft"]) { player.x -= player.speed; player.targetX = player.x; }
+      if(keys["ArrowRight"]) { player.x += player.speed; player.targetX = player.x; }
+      if(keys["ArrowUp"]) { player.y -= player.speed; player.targetY = player.y; }
+      if(keys["ArrowDown"]) { player.y += player.speed; player.targetY = player.y; }
+      // ターゲット座標に向かってスムーズに移動
+      if(Math.abs(player.targetX - player.x) > 1) {
+        player.x += (player.targetX - player.x) * 0.2;
+      }
+      if(Math.abs(player.targetY - player.y) > 1) {
+        player.y += (player.targetY - player.y) * 0.2;
+      }
+      // 画面外に出ないように制限
+      player.x = Math.max(0, Math.min(WIDTH - player.width, player.x));
+      player.y = Math.max(minPlayerY, Math.min(maxPlayerY, player.y));
+      // スペースキーでミサイル発射
+      if(keys["Space"] && canShoot) {
+        missiles.push({
+          x: player.x + player.width/2 - 2.5,
+          y: player.y,
+          width: 5,
+          height: 10,
+          speed: 7
+        });
+        canShoot = false;
+      }
+      updateCommon(dt);
+    }
+
+    // --- ゲームオーバー時の更新 ---
+    // ゲームオーバーになったら、5秒後にdemoモードに戻す
+    function updateGameOver(dt) {
+      gameOverTimer -= dt;
+      if(gameOverTimer <= 0) {
+        resetGame();
+        gameState = "demo";
+      }
+    }
+
+    // --- 共通の更新処理 ---
+    // スコアやタイマーの更新、ミサイル・敵・弾丸・爆発などの処理をまとめる
+    function updateCommon(dt) {
+      timerAccumulator += dt;
+      // 1秒ごとにタイマーとスコアを更新
+      while(timerAccumulator >= 1000) {
+        timerAccumulator -= 1000;
+        timer--;
+        score++;
+      }
+      // タイマーが0になったらステージクリア処理
+      if(timer <= 0 && !stageCleared) {
+        stageCleared = true;
+        paused = true;
+        pauseTimeRemaining = 2000; // 2秒間一時停止
+        score += 100;
+        // 既存のミサイル、敵弾、敵に対して爆発エフェクトを発生させる
+        missiles.forEach(m => { createExplosion(m.x + m.width/2, m.y + m.height/2); });
+        enemyBullets.forEach(bullet => { createExplosion(bullet.x, bullet.y); });
+        enemies.forEach(enemy => { createExplosion(enemy.x + enemy.size/2, enemy.y + enemy.size/2); });
+        // すべてのミサイル、敵弾、敵をリセット
+        missiles = [];
+        enemyBullets = [];
+        enemies = [];
+      }
+      // ミサイルを上方向に移動させる
+      missiles.forEach(m => { m.y -= m.speed; });
+      // 画面外に出たミサイルは削除
+      missiles = missiles.filter(m => m.y + m.height > 0);
+      
+      // --- 敵の出現処理 ---
+      enemySpawnTimer += dt;
+      if(enemySpawnTimer > enemySpawnInterval) {
+        enemySpawnTimer = 0;
+        let enemySize = 60;
+        let minEnemyX = WIDTH * 0.05;
+        let maxEnemyX = WIDTH * 0.95 - enemySize;
+        let spawnX = minEnemyX + Math.random() * (maxEnemyX - minEnemyX);
+        // ステージに応じた難易度設定
+        let effectiveStage = (stage > 1 && stage % 10 === 1) ? 1 : (stage % 10 === 0 ? 10 : stage % 10);
+        enemies.push({
+          x: spawnX,
+          y: -enemySize,  // 画面外上部から出現
+          size: enemySize,
+          speed: (1 + (effectiveStage - 1) * 0.2) * 1.5,
+          bulletTimer: (Math.random() * 2000 + 1000) * enemyBulletIntervalMultiplier,
+          angle: 0,
+          rotationSpeed: ((Math.random() * 0.05 + 0.02) * 3) * enemyRotationMultiplier
+        });
+      }
+      // --- 敵の更新処理 ---
+      enemies.forEach(enemy => {
+        enemy.y += enemy.speed;  // 敵の下方向への移動
+        enemy.angle += enemy.rotationSpeed * dt * 0.001; // 回転処理
+        enemy.bulletTimer -= dt; // 次の弾発射までのタイマーを減らす
+        if(enemy.bulletTimer <= 0) {
+          // 敵が画面下20％（HEIGHT * 0.8）より上にいる場合のみ弾を発射する
+          if(enemy.y < HEIGHT * 0.8) {
+            let spawnX = enemy.x + enemy.size/2;
+            let spawnY = enemy.y + enemy.size;
+            // プレイヤーの中心座標をターゲットにする
+            let targetX = player.x + player.width/2;
+            let targetY = player.y + player.height/2;
+            let dx = targetX - spawnX;
+            let dy = targetY - spawnY;
+            let distance = Math.sqrt(dx*dx + dy*dy);
+            let bulletSpeed = 3 + (stage - 1) * 0.2;
+            let speedX = bulletSpeed * (dx/distance);
+            let speedY = bulletSpeed * (dy/distance);
+            enemyBullets.push({
+              x: spawnX,
+              y: spawnY,
+              radius: 5,
+              speedX: speedX,
+              speedY: speedY
+            });
+          }
+          // 弾発射後、タイマーを再設定
+          enemy.bulletTimer = (Math.random() * 2000 + 1000) * enemyBulletIntervalMultiplier;
+        }
+      });
+      // 画面外に出た敵は削除
+      enemies = enemies.filter(enemy => enemy.y < HEIGHT + enemy.size);
+      // --- 敵弾の更新処理 ---
+      enemyBullets.forEach(bullet => {
+        bullet.x += bullet.speedX;
+        bullet.y += bullet.speedY;
+      });
+      // 画面外に出た敵弾は削除
+      enemyBullets = enemyBullets.filter(bullet => bullet.x >= 0 && bullet.x <= WIDTH && bullet.y <= HEIGHT + bullet.radius);
+      
+      // --- ミサイルと敵の衝突判定 ---
+      for(let i = missiles.length - 1; i >= 0; i--){
+        let m = missiles[i];
+        for(let j = enemies.length - 1; j >= 0; j--){
+          let enemy = enemies[j];
+          // ミサイルと敵の矩形同士の衝突チェック
+          if(rectIntersect(m, { x: enemy.x, y: enemy.y, width: enemy.size, height: enemy.size })){
+            createExplosion(enemy.x + enemy.size/2, enemy.y + enemy.size/2);
+            enemies.splice(j, 1); // 敵を削除
+            missiles.splice(i, 1); // ミサイルを削除
+            score += 10;
+            break;
+          }
+        }
+      }
+      // --- 敵とプレイヤーの衝突判定 ---
+      for(let i = enemies.length - 1; i >= 0; i--){
+        let enemy = enemies[i];
+        if(rectIntersect({ x: enemy.x, y: enemy.y, width: enemy.size, height: enemy.size }, player)){
+          createExplosion(player.x + player.width/2, player.y + player.height/2);
+          enemies.splice(i, 1); // 敵を削除
+          player.life--;      // プレイヤーのライフを減らす
+          if(player.life <= 0){
+            gameState = "gameover";
+            gameOverTimer = 5000; // 5秒後にdemoモードへ
+          }
+        }
+      }
+      // --- 敵弾とプレイヤーの衝突判定 ---
+      for(let i = enemyBullets.length - 1; i >= 0; i--){
+        let bullet = enemyBullets[i];
+        if(rectCircleIntersect(player, bullet)){
+          createExplosion(player.x + player.width/2, player.y + player.height/2);
+          enemyBullets.splice(i,1);
+          player.life--;
+          if(player.life <= 0){
+            gameState = "gameover";
+            gameOverTimer = 5000;
+          }
+        }
+      }
+      // --- 爆発エフェクトの更新 ---
+      explosions.forEach(exp => { exp.update(dt); });
+      explosions = explosions.filter(exp => !exp.done);
+      // --- 背景の星の更新 ---
+      stars.forEach(star => {
+        star.y += star.speed * 1.5;  // 星を下方向に移動
+        if(star.y > HEIGHT){
+          // 画面下に出た星は上に戻す
+          star.y = 0;
+          star.x = Math.random()*WIDTH;
+          star.color = getRandomColor();
+        }
+      });
+    }
+
+    // --- 衝突判定用関数 ---
+    // 矩形同士の衝突判定
+    function rectIntersect(a, b) {
+      return a.x < b.x + b.width &&
+             a.x + a.width > b.x &&
+             a.y < b.y + b.height &&
+             a.y + a.height > b.y;
+    }
+    // 矩形と円の衝突判定
+    function rectCircleIntersect(rect, circle) {
+      let closestX = Math.max(rect.x, Math.min(circle.x, rect.x+rect.width));
+      let closestY = Math.max(rect.y, Math.min(circle.y, rect.y+rect.height));
+      let dx = circle.x - closestX;
+      let dy = circle.y - closestY;
+      return (dx*dx+dy*dy) < (circle.radius*circle.radius);
+    }
+
+    // --- 描画処理 ---
+    function draw() {
+      // 画面全体をクリア
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      // 背景の星を描画
+      stars.forEach(star => {
+        ctx.fillStyle = star.color;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI*2);
+        ctx.fill();
+      });
+      // タッチのスワイプ軌跡を描画
+      if(isSwiping && swipeTrail.length > 0) {
+        ctx.strokeStyle = "rgba(255,255,255,0.5)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(swipeTrail[0].x, swipeTrail[0].y);
+        for(let i = 1; i < swipeTrail.length; i++){
+          ctx.lineTo(swipeTrail[i].x, swipeTrail[i].y);
+        }
+        ctx.stroke();
+      }
+      // ゲームオーバー状態でなければプレイヤーと照準を描画
+      if(gameState!=="gameover"){
+        drawFighter(player.x, player.y, player.width, player.height);
+        drawReticle();
+      }
+      // プレイヤーのミサイルを描画（シアン色）
+      ctx.fillStyle = "cyan";
+      missiles.forEach(m => {
+        ctx.fillRect(m.x, m.y, m.width, m.height);
+      });
+      // 敵を描画
+      enemies.forEach(enemy => {
+        drawTriangle(enemy.x, enemy.y, enemy.size, enemy.angle);
+      });
+      // 敵弾を描画（赤色）
+      ctx.fillStyle = "red";
+      enemyBullets.forEach(bullet => {
+        ctx.beginPath();
+        ctx.arc(bullet.x, bullet.y, bullet.radius, 0, Math.PI*2);
+        ctx.fill();
+      });
+      // 爆発エフェクトを描画
+      explosions.forEach(exp => { exp.draw(ctx); });
+      // スコア、ライフ、ステージ数を左上に表示
+      ctx.fillStyle = "white";
+      ctx.font = "20px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Score: " + score, 10, 30);
+      ctx.fillText("Life: " + player.life, 10, 60);
+      ctx.fillText("Stage: " + stage, 10, 90);
+      // タイマーゲージを右側に描画
+      let blockHeight = 8;
+      let gaugeTotalHeight = 30 * blockHeight;
+      let startY = (HEIGHT - gaugeTotalHeight) / 2;
+      ctx.strokeStyle = "white";
+      ctx.strokeRect(WIDTH - 40, startY, 20, gaugeTotalHeight);
+      ctx.fillStyle = "blue";
+      let currentHeight = timer * blockHeight;
+      ctx.fillRect(WIDTH - 40, startY + (gaugeTotalHeight - currentHeight), 20, currentHeight);
+      
+      // demoモードなら中央に「Push Space Key」のメッセージを表示
+      if(gameState==="demo"){
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.font = "60px sans-serif";
+        ctx.fillText("Cosmic Fight!", WIDTH/2, HEIGHT/3);
+        ctx.font = "40px sans-serif";
+        ctx.fillText("Push Space Key", WIDTH/2, HEIGHT/2);
+      }
+      // ゲームオーバー時は中央に「Game Over」を表示
+      if(gameState==="gameover"){
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.font = "40px sans-serif";
+        ctx.fillText("Game Over", WIDTH/2, HEIGHT/2);
+      }
+      // ステージクリア時のメッセージ表示
+      if(gameState==="playing" && paused && stageCleared){
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.font = "40px sans-serif";
+        ctx.fillText("Stage Clear! Congratulations!", WIDTH/2, HEIGHT/2);
+      }
+    }
+  </script>
+</body>
+</html>
