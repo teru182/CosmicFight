@@ -4,19 +4,22 @@
   <meta charset="utf-8">
   <title>Cosmic Fight!</title>
   <style>
-    /* Bodyは余白ゼロ、背景黒。Flexレイアウトは使わず、上端から表示 */
+    /* Bodyは背景黒、画面中央にキャンバスを配置【変更可能】 */
     body {
       margin: 0;
-      padding: 0;
+      overflow: hidden;
       background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
-    /* キャンバスは横幅100%、最大幅800pxに制限、中央寄せ（横方向のみ）【変更可能】 */
+    /* キャンバスの幅は100%、最大幅800pxに制限【変更可能】 */
     canvas {
-      display: block;
       width: 100%;
       max-width: 800px;
       background: black;
-      margin: 0 auto;
+      display: block;
     }
   </style>
 </head>
@@ -28,17 +31,16 @@
      ********************/
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    // 初期サイズはJavaScriptで設定（横幅はウィンドウ幅か800pxの小さい方）
-    let WIDTH, HEIGHT;
-    function resizeCanvas() {
-      WIDTH = canvas.width = Math.min(window.innerWidth, 800); // 最大800px【変更可能】
-      HEIGHT = canvas.height = window.innerHeight; // 実際の表示高さに合わせる
-      // プレイヤーの移動範囲再設定【変更可能】
+    // 初期解像度はCSSとは別にJavaScriptで設定する
+    let WIDTH = canvas.width = Math.min(window.innerWidth, 800); // 変更可能：最大800px
+    let HEIGHT = canvas.height = window.innerHeight;
+    window.addEventListener("resize", () => {
+      WIDTH = canvas.width = Math.min(window.innerWidth, 800);
+      HEIGHT = canvas.height = window.innerHeight;
+      // プレイヤーの移動可能範囲再設定【変更可能】
       minPlayerY = HEIGHT * 0.5;
       maxPlayerY = HEIGHT - player.height;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
+    });
 
     /********************
      * ユーティリティ関数
