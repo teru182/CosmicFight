@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <title>Cosmic Fight!</title>
   <style>
-    /* —]”’‚ğ‚È‚­‚µ‚Ä”wŒi‚ğ•‚Éİ’èy•ÏX‰Â”\z */
+    /* ä½™ç™½ã‚’ãªãã—ã¦èƒŒæ™¯ã‚’é»’ã«è¨­å®šã€å¤‰æ›´å¯èƒ½ã€‘ */
     body { margin: 0; overflow: hidden; background: black; }
-    /* ƒLƒƒƒ“ƒoƒX‚à•”wŒiy•ÏX‰Â”\z */
+    /* ã‚­ãƒ£ãƒ³ãƒã‚¹ã‚‚é»’èƒŒæ™¯ã€å¤‰æ›´å¯èƒ½ã€‘ */
     canvas { display: block; background: black; }
   </style>
 </head>
 <body>
-  <!-- ƒQ[ƒ€•`‰æ—pƒLƒƒƒ“ƒoƒX -->
+  <!-- ã‚²ãƒ¼ãƒ æç”»ç”¨ã‚­ãƒ£ãƒ³ãƒã‚¹ -->
   <canvas id="gameCanvas"></canvas>
   <script>
     /********************
-     * ƒLƒƒƒ“ƒoƒXİ’è
+     * ã‚­ãƒ£ãƒ³ãƒã‚¹è¨­å®š
      ********************/
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
@@ -33,7 +33,7 @@
     });
 
     /********************
-     * ƒ†[ƒeƒBƒŠƒeƒBŠÖ”
+     * ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£é–¢æ•°
      ********************/
     function getRandomColor() {
       const letters = '0123456789ABCDEF';
@@ -45,7 +45,7 @@
     }
 
     /********************
-     * ƒTƒEƒ“ƒhİ’è
+     * ã‚µã‚¦ãƒ³ãƒ‰è¨­å®š
      ********************/
     const shootSound = new Audio('sounds/shoot.mp3');         
     const explosionSound = new Audio('sounds/explosion.mp3');   
@@ -54,7 +54,7 @@
     bgmSound.volume = 0.5;
 
     /********************
-     * ƒQ[ƒ€ó‘ÔŠÇ—
+     * ã‚²ãƒ¼ãƒ çŠ¶æ…‹ç®¡ç†
      ********************/
     let gameState = "demo"; // "demo", "playing", "gameover"
     let gameOverTimer = 0;
@@ -62,14 +62,14 @@
     let canShoot = true; 
 
     /********************
-     * ƒL[ƒ{[ƒh‘€ì
+     * ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œ
      ********************/
     document.addEventListener("keydown", (e) => {
       keys[e.code] = true;
       if(gameState === "demo" && e.code === "Space"){
         resetGame();
         gameState = "playing";
-        bgmSound.play(); // ƒQ[ƒ€ŠJn‚ÉBGMÄ¶
+        bgmSound.play(); // ã‚²ãƒ¼ãƒ é–‹å§‹æ™‚ã«BGMå†ç”Ÿ
       }
     });
     document.addEventListener("keyup", (e) => {
@@ -80,7 +80,7 @@
     });
 
     /********************
-     * ƒ^ƒbƒ`‘€ì
+     * ã‚¿ãƒƒãƒæ“ä½œ
      ********************/
     let touchStartX = null, touchStartY = null;
     let isSwiping = false;
@@ -107,11 +107,11 @@
 
 canvas.addEventListener("touchend", (e) => {
   e.preventDefault();
-  // ƒ^ƒbƒv‚ÆƒXƒƒCƒv‚Ì”»’è—p‚ÉAˆÚ“®‹——£‚Ì·‚ğƒ`ƒFƒbƒN
+  // ã‚¿ãƒƒãƒ—ã¨ã‚¹ãƒ¯ã‚¤ãƒ—ã®åˆ¤å®šç”¨ã«ã€ç§»å‹•è·é›¢ã®å·®ã‚’ãƒã‚§ãƒƒã‚¯
   if(swipeTrail.length < 2 ||
      (Math.abs(swipeTrail[swipeTrail.length - 1].x - swipeTrail[0].x) < 10 &&
       Math.abs(swipeTrail[swipeTrail.length - 1].y - swipeTrail[0].y) < 10)) {
-    // ƒ^ƒbƒv‚Æ‚İ‚È‚·F‚·‚®ƒ~ƒTƒCƒ‹”­Ë
+    // ã‚¿ãƒƒãƒ—ã¨ã¿ãªã™ï¼šã™ããƒŸã‚µã‚¤ãƒ«ç™ºå°„
     missiles.push({
       x: player.x + player.width / 2 - 2.5,
       y: player.y,
@@ -122,7 +122,7 @@ canvas.addEventListener("touchend", (e) => {
     shootSound.currentTime = 0;
     shootSound.play();
   } else {
-    // ƒXƒƒCƒv‚Æ‚µ‚Äˆ—
+    // ã‚¹ãƒ¯ã‚¤ãƒ—ã¨ã—ã¦å‡¦ç†
     const lastPoint = swipeTrail[swipeTrail.length - 1];
     player.targetX = lastPoint.x - player.width / 2;
     player.targetY = lastPoint.y - player.height / 2;
@@ -132,7 +132,7 @@ canvas.addEventListener("touchend", (e) => {
 });
 
     /********************
-     * ƒQ[ƒ€“à•Ï”
+     * ã‚²ãƒ¼ãƒ å†…å¤‰æ•°
      ********************/
     let score = 0;
     let stage = 1;
@@ -145,7 +145,7 @@ canvas.addEventListener("touchend", (e) => {
     let enemyRotationMultiplier = 1.0;
 
     /********************
-     * ƒvƒŒƒCƒ„[İ’è
+     * ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¨­å®š
      ********************/
     const player = {
       x: WIDTH / 2 - 30,
@@ -167,7 +167,7 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     /********************
-     * ƒIƒuƒWƒFƒNƒgŒQ‚ÌéŒ¾
+     * ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç¾¤ã®å®£è¨€
      ********************/
     let missiles = [];
     let enemies = [];
@@ -177,9 +177,9 @@ canvas.addEventListener("touchend", (e) => {
     let explosions = [];
     let pulseWaves = [];
     let stars = [];
-    // ’Ç‰Á: ƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€—p‚Ì”z—ñ
+    // è¿½åŠ : ãƒ‘ãƒ¯ãƒ¼ã‚¢ãƒƒãƒ—ã‚¢ã‚¤ãƒ†ãƒ ç”¨ã®é…åˆ—
     let powerUps = [];
-    // ’Ç‰Á: ƒ[ƒ€Œ^˜AŒ‹“G—p‚Ì”z—ñ
+    // è¿½åŠ : ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µç”¨ã®é…åˆ—
     let wormEnemies = [];
 
     for(let i = 0; i < 100; i++){
@@ -193,13 +193,13 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     /********************
-     * “GoŒ»ŠÇ—
+     * æ•µå‡ºç¾ç®¡ç†
      ********************/
     let enemySpawnTimer = 0;
     let enemySpawnInterval = 2000;
 
     /********************
-     * ”š”­ƒGƒtƒFƒNƒg‚Ì’è‹`
+     * çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å®šç¾©
      ********************/
     function Explosion(x, y) {
       this.x = x;
@@ -241,7 +241,7 @@ canvas.addEventListener("touchend", (e) => {
       });
       ctx.restore();
     };
-    // ”š”­ƒGƒtƒFƒNƒg¶¬Aƒfƒ‚ƒ‚[ƒh’†‚Í‰¹‚ğÄ¶‚µ‚È‚¢
+    // çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆç”Ÿæˆæ™‚ã€ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰ä¸­ã¯éŸ³ã‚’å†ç”Ÿã—ãªã„
     function createExplosion(x, y) {
       explosions.push(new Explosion(x, y));
       if(gameState !== "demo"){
@@ -251,7 +251,7 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     /********************
-     * •`‰æ—pŠÖ”
+     * æç”»ç”¨é–¢æ•°
      ********************/
     function drawTriangle(x, y, size, angle) {
       ctx.save();
@@ -328,13 +328,13 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     /********************
-     * ƒfƒ‚ƒ‚[ƒhŠÖ˜A
+     * ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰é–¢é€£
      ********************/
     let demoDirection = 1;
     let demoFireTimer = 0;
 
     /********************
-     * ƒQ[ƒ€ƒŠƒZƒbƒgŠÖ”
+     * ã‚²ãƒ¼ãƒ ãƒªã‚»ãƒƒãƒˆé–¢æ•°
      ********************/
     function resetGame(){
       score = 0;
@@ -359,12 +359,12 @@ canvas.addEventListener("touchend", (e) => {
       enemyBullets = [];
       explosions = [];
       pulseWaves = [];
-      powerUps = []; // ’Ç‰Á: ƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€ƒŠƒZƒbƒg
-      wormEnemies = []; // ’Ç‰Á: ƒ[ƒ€Œ^˜AŒ‹“GƒŠƒZƒbƒg
+      powerUps = []; // è¿½åŠ : ãƒ‘ãƒ¯ãƒ¼ã‚¢ãƒƒãƒ—ã‚¢ã‚¤ãƒ†ãƒ ãƒªã‚»ãƒƒãƒˆ
+      wormEnemies = []; // è¿½åŠ : ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µãƒªã‚»ãƒƒãƒˆ
     }
 
     /********************
-     * ƒƒCƒ“ƒQ[ƒ€ƒ‹[ƒv
+     * ãƒ¡ã‚¤ãƒ³ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
      ********************/
     let lastTime = 0;
     function gameLoop(timestamp) {
@@ -383,7 +383,7 @@ canvas.addEventListener("touchend", (e) => {
     requestAnimationFrame(gameLoop);
 
     /********************
-     * ƒfƒ‚ƒ‚[ƒhXV
+     * ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰æ›´æ–°
      ********************/
     function updateDemo(dt) {
       if(player.x <= 0) { demoDirection = 1; }
@@ -402,13 +402,13 @@ canvas.addEventListener("touchend", (e) => {
           speed: 7
         });
         demoFireTimer = 0;
-        // ƒfƒ‚ƒ‚[ƒh’†‚ÍŒø‰Ê‰¹‚ğÄ¶‚µ‚È‚¢
+        // ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰ä¸­ã¯åŠ¹æœéŸ³ã‚’å†ç”Ÿã—ãªã„
       }
       updateCommon(dt);
     }
 
     /********************
-     * ƒvƒŒƒC’†XV
+     * ãƒ—ãƒ¬ã‚¤ä¸­æ›´æ–°
      ********************/
     function updatePlaying(dt) {
       if(paused) {
@@ -455,20 +455,20 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     /********************
-     * ƒQ[ƒ€ƒI[ƒo[XV
+     * ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ›´æ–°
      ********************/
     function updateGameOver(dt) {
       gameOverTimer -= dt;
       if(gameOverTimer <= 0) {
-        bgmSound.pause();         // BGM’â~
-        bgmSound.currentTime = 0; // Ä¶ˆÊ’uƒŠƒZƒbƒg
+        bgmSound.pause();         // BGMåœæ­¢
+        bgmSound.currentTime = 0; // å†ç”Ÿä½ç½®ãƒªã‚»ãƒƒãƒˆ
         resetGame();
         gameState = "demo";
       }
     }
 
     /********************
-     * ‹¤’ÊXVˆ—
+     * å…±é€šæ›´æ–°å‡¦ç†
      ********************/
     function updateCommon(dt) {
       timerAccumulator += dt;
@@ -493,8 +493,8 @@ canvas.addEventListener("touchend", (e) => {
         enemies = [];
         pulseEnemies = [];
         splashGroups = [];
-        powerUps = []; // ’Ç‰Á: ƒXƒe[ƒWƒNƒŠƒA‚Éƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚àƒŠƒZƒbƒg
-        wormEnemies = []; // ’Ç‰Á: ƒ[ƒ€Œ^˜AŒ‹“G‚àƒŠƒZƒbƒg
+        powerUps = []; // è¿½åŠ : ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢æ™‚ã«ãƒ‘ãƒ¯ãƒ¼ã‚¢ãƒƒãƒ—ã‚¢ã‚¤ãƒ†ãƒ ã‚‚ãƒªã‚»ãƒƒãƒˆ
+        wormEnemies = []; // è¿½åŠ : ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µã‚‚ãƒªã‚»ãƒƒãƒˆ
       }
       missiles.forEach(m => { m.y -= m.speed; });
       missiles = missiles.filter(m => m.y + m.height > 0);
@@ -530,7 +530,7 @@ canvas.addEventListener("touchend", (e) => {
             size: enemySize
           });
         }
-        // ’Ç‰Á: ƒXƒe[ƒW3ˆÈã‚È‚çAƒ[ƒ€Œ^˜AŒ‹“G‚à“oêiŠm—¦F0.5j
+        // è¿½åŠ : ã‚¹ãƒ†ãƒ¼ã‚¸3ä»¥ä¸Šãªã‚‰ã€ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µã‚‚ç™»å ´ï¼ˆç¢ºç‡ï¼š0.5ï¼‰
         else if(stage >= 3 && r < 0.5) {
           let worm = {
             type: "worm",
@@ -539,7 +539,7 @@ canvas.addEventListener("touchend", (e) => {
             speed: 1.5,
             segmentCount: 5,
             segmentSpacing: 100,
-            // ‰Šú‚Ì‰ñ“]Šp“x‚Íƒ‰ƒ“ƒ_ƒ€
+            // åˆæœŸã®å›è»¢è§’åº¦ã¯ãƒ©ãƒ³ãƒ€ãƒ 
             baseAngle: Math.random() * 2 * Math.PI,
             segments: []
           };
@@ -629,12 +629,12 @@ canvas.addEventListener("touchend", (e) => {
         group.baseAngle += group.rotationSpeed * dt;
       });
 
-      // XV: ƒ[ƒ€Œ^˜AŒ‹“G‚ÌXVˆ—  // ’Ç‰Á: ƒ[ƒ€Œ^˜AŒ‹“G
+      // æ›´æ–°: ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µã®æ›´æ–°å‡¦ç†  // è¿½åŠ : ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µ
       wormEnemies.forEach(worm => {
-        // “ª•”‚ÌˆÚ“®i‰º•ûŒü‚ÉˆÚ“®{Œy‚¢‰¡•ûŒü‚Ì—h‚êj
+        // é ­éƒ¨ã®ç§»å‹•ï¼ˆä¸‹æ–¹å‘ã«ç§»å‹•ï¼‹è»½ã„æ¨ªæ–¹å‘ã®æºã‚Œï¼‰
         worm.headY += worm.speed;
         worm.headX += Math.sin(Date.now()/500) * 3;
-        // ƒZƒOƒƒ“ƒg‚Í“ª•”‚â‘O‚ÌƒZƒOƒƒ“ƒg‚É’Ç]
+        // ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã¯é ­éƒ¨ã‚„å‰ã®ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã«è¿½å¾“
         let prevX = worm.headX, prevY = worm.headY;
         worm.segments.forEach(segment => {
           segment.x += (prevX - segment.x) * 0.1;
@@ -655,13 +655,13 @@ canvas.addEventListener("touchend", (e) => {
       });
       enemyBullets = enemyBullets.filter(b => b.x >= 0 && b.x <= WIDTH && b.y <= HEIGHT + b.radius);
 
-      // ’Ç‰Á: ƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚ÌˆÚ“®ˆ—i’Êí“G‚Æ“¯‚¶‘¬‚³‚Å‰º•ûŒü‚ÉˆÚ“®j
+      // è¿½åŠ : ãƒ‘ãƒ¯ãƒ¼ã‚¢ãƒƒãƒ—ã‚¢ã‚¤ãƒ†ãƒ ã®ç§»å‹•å‡¦ç†ï¼ˆé€šå¸¸æ•µã¨åŒã˜é€Ÿã•ã§ä¸‹æ–¹å‘ã«ç§»å‹•ï¼‰
       powerUps.forEach(powerUp => {
         powerUp.y += powerUp.speed;
       });
       powerUps = powerUps.filter(powerUp => powerUp.y - powerUp.radius < HEIGHT);
 
-      // ƒ~ƒTƒCƒ‹‚Æ’Êí“G‚ÌÕ“Ëˆ—iƒpƒ[ƒAƒbƒvoŒ»‹@”\‚ğ’Ç‰Áj
+      // ãƒŸã‚µã‚¤ãƒ«ã¨é€šå¸¸æ•µã®è¡çªå‡¦ç†ï¼ˆãƒ‘ãƒ¯ãƒ¼ã‚¢ãƒƒãƒ—å‡ºç¾æ©Ÿèƒ½ã‚’è¿½åŠ ï¼‰
       for(let i = missiles.length - 1; i >= 0; i--){
         let m = missiles[i];
         for(let j = enemies.length - 1; j >= 0; j--){
@@ -683,7 +683,7 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ƒ~ƒTƒCƒ‹‚Æƒpƒ‹ƒX“G‚ÌÕ“Ëˆ—
+      // ãƒŸã‚µã‚¤ãƒ«ã¨ãƒ‘ãƒ«ã‚¹æ•µã®è¡çªå‡¦ç†
       for(let i = missiles.length - 1; i >= 0; i--){
         let m = missiles[i];
         for(let j = pulseEnemies.length - 1; j >= 0; j--){
@@ -697,7 +697,7 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ƒ~ƒTƒCƒ‹‚ÆƒXƒvƒ‰ƒbƒVƒ…ƒOƒ‹[ƒv‚ÌÕ“Ëˆ—
+      // ãƒŸã‚µã‚¤ãƒ«ã¨ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥ã‚°ãƒ«ãƒ¼ãƒ—ã®è¡çªå‡¦ç†
       for(let i = missiles.length - 1; i >= 0; i--){
         let m = missiles[i];
         for(let j = splashGroups.length - 1; j >= 0; j--){
@@ -747,14 +747,14 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ’Ç‰Á: ƒ~ƒTƒCƒ‹‚Æƒ[ƒ€Œ^˜AŒ‹“G‚ÌÕ“Ëˆ—i“ª•”‚Ì‚İ—LŒøj
+      // è¿½åŠ : ãƒŸã‚µã‚¤ãƒ«ã¨ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µã®è¡çªå‡¦ç†ï¼ˆé ­éƒ¨ã®ã¿æœ‰åŠ¹ï¼‰
       for(let i = missiles.length - 1; i >= 0; i--){
         let m = missiles[i];
         for(let j = wormEnemies.length - 1; j >= 0; j--){
           let worm = wormEnemies[j];
           let dx = (m.x + m.width/2) - worm.headX;
           let dy = (m.y + m.height/2) - worm.headY;
-          if(dx*dx + dy*dy < 20*20){  // “ª•””¼Œa20
+          if(dx*dx + dy*dy < 20*20){  // é ­éƒ¨åŠå¾„20
             createExplosion(worm.headX, worm.headY);
             wormEnemies.splice(j, 1);
             missiles.splice(i, 1);
@@ -763,7 +763,7 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ƒvƒŒƒCƒ„[‚Æ’Êí“G‚ÌÕ“Ëˆ—
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨é€šå¸¸æ•µã®è¡çªå‡¦ç†
       for(let i = enemies.length - 1; i >= 0; i--){
         let enemy = enemies[i];
         if(rectIntersect({ x: enemy.x, y: enemy.y, width: enemy.size, height: enemy.size }, player)){
@@ -776,7 +776,7 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ƒvƒŒƒCƒ„[‚Æƒpƒ‹ƒX“G‚ÌÕ“Ëˆ—
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ãƒ‘ãƒ«ã‚¹æ•µã®è¡çªå‡¦ç†
       for(let i = pulseEnemies.length - 1; i >= 0; i--){
         let enemy = pulseEnemies[i];
         if(rectIntersect({ x: enemy.x, y: enemy.y, width: enemy.size, height: enemy.size }, player)){
@@ -789,7 +789,7 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ƒvƒŒƒCƒ„[‚ÆƒXƒvƒ‰ƒbƒVƒ…“G‚ÌÕ“Ëˆ—
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥æ•µã®è¡çªå‡¦ç†
       for(let j = splashGroups.length - 1; j >= 0; j--){
         let group = splashGroups[j];
         for(let k = 0; k < 3; k++){
@@ -809,10 +809,10 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ’Ç‰Á: ƒvƒŒƒCƒ„[‚Æƒ[ƒ€Œ^˜AŒ‹“G‚ÌÕ“Ëˆ—i“ª•”‚ÆŠeƒZƒOƒƒ“ƒgj
+      // è¿½åŠ : ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µã®è¡çªå‡¦ç†ï¼ˆé ­éƒ¨ã¨å„ã‚»ã‚°ãƒ¡ãƒ³ãƒˆï¼‰
       for(let j = wormEnemies.length - 1; j >= 0; j--){
         let worm = wormEnemies[j];
-        // “ª•”‚Ìƒ`ƒFƒbƒN
+        // é ­éƒ¨ã®ãƒã‚§ãƒƒã‚¯
         if(rectCircleIntersect(player, { x: worm.headX, y: worm.headY, radius: 20 })){
           createExplosion(player.x + player.width/2, player.y + player.height/2);
           wormEnemies.splice(j, 1);
@@ -823,7 +823,7 @@ canvas.addEventListener("touchend", (e) => {
           }
           continue;
         }
-        // ŠeƒZƒOƒƒ“ƒg‚Ìƒ`ƒFƒbƒN
+        // å„ã‚»ã‚°ãƒ¡ãƒ³ãƒˆã®ãƒã‚§ãƒƒã‚¯
         for(let k = 0; k < worm.segments.length; k++){
           let seg = worm.segments[k];
           if(rectCircleIntersect(player, { x: seg.x, y: seg.y, radius: 15 })){
@@ -838,7 +838,7 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ƒvƒŒƒCƒ„[‚Æ“G’e‚ÌÕ“Ëˆ—
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨æ•µå¼¾ã®è¡çªå‡¦ç†
       for(let i = enemyBullets.length - 1; i >= 0; i--){
         let bullet = enemyBullets[i];
         if(rectCircleIntersect(player, bullet)){
@@ -851,7 +851,7 @@ canvas.addEventListener("touchend", (e) => {
           }
         }
       }
-      // ’Ç‰Á: ƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚ÆƒvƒŒƒCƒ„[‚ÌÕ“Ëˆ—
+      // è¿½åŠ : ãƒ‘ãƒ¯ãƒ¼ã‚¢ãƒƒãƒ—ã‚¢ã‚¤ãƒ†ãƒ ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡çªå‡¦ç†
       for(let i = powerUps.length - 1; i >= 0; i--){
         let powerUp = powerUps[i];
         if(rectCircleIntersect(player, { x: powerUp.x, y: powerUp.y, radius: powerUp.radius })){
@@ -900,7 +900,7 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     /********************
-     * Õ“Ë”»’èŠÖ”
+     * è¡çªåˆ¤å®šé–¢æ•°
      ********************/
     function rectIntersect(a, b) {
       return a.x < b.x + b.width &&
@@ -917,7 +917,7 @@ canvas.addEventListener("touchend", (e) => {
     }
 
     /********************
-     * •`‰æˆ—
+     * æç”»å‡¦ç†
      ********************/
     function draw() {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -979,7 +979,7 @@ canvas.addEventListener("touchend", (e) => {
         ctx.arc(bullet.x, bullet.y, bullet.radius, 0, Math.PI * 2);
         ctx.fill();
       });
-      // ’Ç‰Á: ƒpƒ[ƒAƒbƒvƒAƒCƒeƒ€‚Ì•`‰æ
+      // è¿½åŠ : ãƒ‘ãƒ¯ãƒ¼ã‚¢ãƒƒãƒ—ã‚¢ã‚¤ãƒ†ãƒ ã®æç”»
       powerUps.forEach(powerUp => {
         ctx.save();
         ctx.beginPath();
@@ -989,7 +989,7 @@ canvas.addEventListener("touchend", (e) => {
         ctx.lineWidth = 6;
         ctx.strokeStyle = "white";
         ctx.stroke();
-        // ’†‰›‚É”’‚¢ƒNƒƒXƒ}[ƒN
+        // ä¸­å¤®ã«ç™½ã„ã‚¯ãƒ­ã‚¹ãƒãƒ¼ã‚¯
         ctx.beginPath();
         ctx.moveTo(powerUp.x - powerUp.radius/2, powerUp.y);
         ctx.lineTo(powerUp.x + powerUp.radius/2, powerUp.y);
@@ -998,9 +998,9 @@ canvas.addEventListener("touchend", (e) => {
         ctx.stroke();
         ctx.restore();
       });
-      // ’Ç‰Á: ƒ[ƒ€Œ^˜AŒ‹“G‚Ì•`‰æ
+      // è¿½åŠ : ãƒ¯ãƒ¼ãƒ å‹é€£çµæ•µã®æç”»
       wormEnemies.forEach(worm => {
-        // “ª•”
+        // é ­éƒ¨
         ctx.save();
         ctx.beginPath();
         ctx.arc(worm.headX, worm.headY, 20, 0, Math.PI*2);
@@ -1009,7 +1009,7 @@ canvas.addEventListener("touchend", (e) => {
         ctx.strokeStyle = "red";
         ctx.stroke();
         ctx.restore();
-        // ƒZƒOƒƒ“ƒg
+        // ã‚»ã‚°ãƒ¡ãƒ³ãƒˆ
         worm.segments.forEach(segment => {
           ctx.save();
           ctx.beginPath();
