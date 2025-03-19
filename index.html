@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=800, initial-scale=0.5,minimum-scale=0.5, maximum-scale=0.5, user-scalable=yes">
   <title>Cosmic Fight!</title>
   <style>
     /* 余白をなくして背景を黒に設定【変更可能】 */
@@ -19,7 +20,7 @@
      ********************/
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    let WIDTH = 800; //window.innerWidth;   
+    let WIDTH = window.innerWidth;   
     let HEIGHT = window.innerHeight; 
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
