@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   <title>Cosmic Fight!</title>
   <style>
-    /* —]”’‚ğ‚È‚­‚µ‚Ä”wŒi‚ğ•‚Éİ’èy•ÏX‰Â”\z */
+    /* ä½™ç™½ã‚’ãªãã—ã¦èƒŒæ™¯ã‚’é»’ã«è¨­å®šã€å¤‰æ›´å¯èƒ½ã€‘ */
     body { margin: 0; overflow: hidden; background: black; }
-    /* ƒLƒƒƒ“ƒoƒX‚à•”wŒiy•ÏX‰Â”\z */
+    /* ã‚­ãƒ£ãƒ³ãƒã‚¹ã‚‚é»’èƒŒæ™¯ã€å¤‰æ›´å¯èƒ½ã€‘ */
     canvas { display: block; background: black; }
   </style>
 </head>
 <body>
-  <!-- ƒQ[ƒ€•`‰æ—pƒLƒƒƒ“ƒoƒX -->
+  <!-- ã‚²ãƒ¼ãƒ æç”»ç”¨ã‚­ãƒ£ãƒ³ãƒã‚¹ -->
   <canvas id="gameCanvas"></canvas>
   <script>
     /********************
-     * ƒLƒƒƒ“ƒoƒXİ’è
+     * ã‚­ãƒ£ãƒ³ãƒã‚¹è¨­å®š
      ********************/
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    let WIDTH = window.innerWidth;   // •ÏX‰Â”\F‰æ–Ê•
-    let HEIGHT = window.innerHeight; // •ÏX‰Â”\F‰æ–Ê‚‚³
+    let WIDTH = window.innerWidth;   // å¤‰æ›´å¯èƒ½ï¼šç”»é¢å¹…
+    let HEIGHT = window.innerHeight; // å¤‰æ›´å¯èƒ½ï¼šç”»é¢é«˜ã•
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
     window.addEventListener("resize", () => {
@@ -28,15 +28,15 @@
       HEIGHT = window.innerHeight;
       canvas.width = WIDTH;
       canvas.height = HEIGHT;
-      // ƒvƒŒƒCƒ„[‚ÌˆÚ“®‰Â”\”ÍˆÍÄİ’èy•ÏX‰Â”\z
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•å¯èƒ½ç¯„å›²å†è¨­å®šã€å¤‰æ›´å¯èƒ½ã€‘
       minPlayerY = HEIGHT * 0.5;
       maxPlayerY = HEIGHT - player.height;
     });
 
     /********************
-     * ƒ†[ƒeƒBƒŠƒeƒBŠÖ”
+     * ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£é–¢æ•°
      ********************/
-    // ƒ‰ƒ“ƒ_ƒ€‚È16i”ƒJƒ‰[¶¬y•ÏX‰Â”\z
+    // ãƒ©ãƒ³ãƒ€ãƒ ãª16é€²æ•°ã‚«ãƒ©ãƒ¼ç”Ÿæˆã€å¤‰æ›´å¯èƒ½ã€‘
     function getRandomColor() {
       const letters = '0123456789ABCDEF';
       let color = '#';
@@ -47,19 +47,19 @@
     }
 
     /********************
-     * ƒQ[ƒ€ó‘ÔŠÇ—
+     * ã‚²ãƒ¼ãƒ çŠ¶æ…‹ç®¡ç†
      ********************/
     let gameState = "demo"; // "demo", "playing", "gameover"
     let gameOverTimer = 0;
-    let keys = {}; // ƒL[“ü—Íó‘Ô
-    let canShoot = true; // ƒ~ƒTƒCƒ‹”­Ë‰Â”\‚©
+    let keys = {}; // ã‚­ãƒ¼å…¥åŠ›çŠ¶æ…‹
+    let canShoot = true; // ãƒŸã‚µã‚¤ãƒ«ç™ºå°„å¯èƒ½ã‹
 
     /********************
-     * ƒL[ƒ{[ƒh‘€ì
+     * ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰æ“ä½œ
      ********************/
     document.addEventListener("keydown", (e) => {
       keys[e.code] = true;
-      // ƒfƒ‚ƒ‚[ƒh’†‚ÉƒXƒy[ƒXƒL[‚ÅƒQ[ƒ€ŠJny•ÏX‰Â”\z
+      // ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰ä¸­ã«ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼ã§ã‚²ãƒ¼ãƒ é–‹å§‹ã€å¤‰æ›´å¯èƒ½ã€‘
       if(gameState === "demo" && e.code === "Space"){
         resetGame();
         gameState = "playing";
@@ -67,18 +67,18 @@
     });
     document.addEventListener("keyup", (e) => {
       keys[e.code] = false;
-      // ƒXƒy[ƒXƒL[—£‚·‚ÆÄ”­Ë‰Â”\y•ÏX‰Â”\z
+      // ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼é›¢ã™ã¨å†ç™ºå°„å¯èƒ½ã€å¤‰æ›´å¯èƒ½ã€‘
       if(e.code === "Space"){
         canShoot = true;
       }
     });
 
     /********************
-     * ƒ^ƒbƒ`‘€ì
+     * ã‚¿ãƒƒãƒæ“ä½œ
      ********************/
     let touchStartX = null, touchStartY = null;
     let isSwiping = false;
-    let swipeTrail = []; // ƒ^ƒbƒ`ˆÚ“®‚Ì‹OÕ‹L˜^
+    let swipeTrail = []; // ã‚¿ãƒƒãƒç§»å‹•æ™‚ã®è»Œè·¡è¨˜éŒ²
     canvas.addEventListener("touchstart", (e) => {
       e.preventDefault();
       const touch = e.touches[0];
@@ -94,7 +94,7 @@
       const touch = e.touches[0];
       isSwiping = true;
       swipeTrail.push({ x: touch.clientX, y: touch.clientY });
-      // ƒvƒŒƒCƒ„[‚ÌˆÚ“®ƒ^[ƒQƒbƒgXVy•ÏX‰Â”\z
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ›´æ–°ã€å¤‰æ›´å¯èƒ½ã€‘
       player.targetX = touch.clientX - player.width / 2;
       player.targetY = touch.clientY - player.height / 2;
     });
@@ -105,14 +105,14 @@
         player.targetX = lastPoint.x - player.width / 2;
         player.targetY = lastPoint.y - player.height / 2;
       } else {
-        // ƒXƒƒCƒv‚Å‚È‚¯‚ê‚Î”­Ëˆ—y•ÏX‰Â”\z
+        // ã‚¹ãƒ¯ã‚¤ãƒ—ã§ãªã‘ã‚Œã°ç™ºå°„å‡¦ç†ã€å¤‰æ›´å¯èƒ½ã€‘
         if(canShoot) {
           missiles.push({
             x: player.x + player.width / 2 - 2.5,
             y: player.y,
-            width: 5,         // •ÏX‰Â”\Fƒ~ƒTƒCƒ‹•
-            height: 10,       // •ÏX‰Â”\Fƒ~ƒTƒCƒ‹‚‚³
-            speed: 7          // •ÏX‰Â”\Fƒ~ƒTƒCƒ‹‘¬“x
+            width: 5,         // å¤‰æ›´å¯èƒ½ï¼šãƒŸã‚µã‚¤ãƒ«å¹…
+            height: 10,       // å¤‰æ›´å¯èƒ½ï¼šãƒŸã‚µã‚¤ãƒ«é«˜ã•
+            speed: 7          // å¤‰æ›´å¯èƒ½ï¼šãƒŸã‚µã‚¤ãƒ«é€Ÿåº¦
           });
           canShoot = false;
         }
@@ -125,35 +125,35 @@
     });
 
     /********************
-     * ƒQ[ƒ€“à•Ï”
+     * ã‚²ãƒ¼ãƒ å†…å¤‰æ•°
      ********************/
     let score = 0;
     let stage = 1;
-    let timer = 30;             // ƒQ[ƒ€§ŒÀŠÔi•bjy•ÏX‰Â”\z
-    let timerAccumulator = 0;   // Œo‰ßŠÔ’~Ï
+    let timer = 30;             // ã‚²ãƒ¼ãƒ åˆ¶é™æ™‚é–“ï¼ˆç§’ï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
+    let timerAccumulator = 0;   // çµŒéæ™‚é–“è“„ç©
     let paused = false;
     let stageCleared = false;
-    let pauseTimeRemaining = 2000; // ƒXƒe[ƒWŠÔˆê’â~ŠÔimsjy•ÏX‰Â”\z
-    // “G‚Ì“ïˆÕ“x’²®—pƒpƒ‰ƒ[ƒ^[y•ÏX‰Â”\z
+    let pauseTimeRemaining = 2000; // ã‚¹ãƒ†ãƒ¼ã‚¸é–“ä¸€æ™‚åœæ­¢æ™‚é–“ï¼ˆmsï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
+    // æ•µã®é›£æ˜“åº¦èª¿æ•´ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ã€å¤‰æ›´å¯èƒ½ã€‘
     let enemyBulletIntervalMultiplier = 1.0;
     let enemyRotationMultiplier = 1.0;
 
     /********************
-     * ƒvƒŒƒCƒ„[İ’è
+     * ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¨­å®š
      ********************/
     const player = {
-      x: WIDTH / 2 - 30, // ‰ŠúXÀ•Wy•ÏX‰Â”\z
-      y: HEIGHT - 70,    // ‰ŠúYÀ•Wy•ÏX‰Â”\z
-      width: 60,         // ƒvƒŒƒCƒ„[•y•ÏX‰Â”\z
-      height: 45,        // ƒvƒŒƒCƒ„[‚‚³y•ÏX‰Â”\z
-      speed: 5,          // ˆÚ“®‘¬“xy•ÏX‰Â”\z
-      life: 3,           // ƒ‰ƒCƒty•ÏX‰Â”\z
-      targetX: WIDTH / 2 - 30, // ˆÚ“®–Ú•WX
-      targetY: HEIGHT - 70     // ˆÚ“®–Ú•WY
+      x: WIDTH / 2 - 30, // åˆæœŸXåº§æ¨™ã€å¤‰æ›´å¯èƒ½ã€‘
+      y: HEIGHT - 70,    // åˆæœŸYåº§æ¨™ã€å¤‰æ›´å¯èƒ½ã€‘
+      width: 60,         // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å¹…ã€å¤‰æ›´å¯èƒ½ã€‘
+      height: 45,        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼é«˜ã•ã€å¤‰æ›´å¯èƒ½ã€‘
+      speed: 5,          // ç§»å‹•é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
+      life: 3,           // ãƒ©ã‚¤ãƒ•ã€å¤‰æ›´å¯èƒ½ã€‘
+      targetX: WIDTH / 2 - 30, // ç§»å‹•ç›®æ¨™X
+      targetY: HEIGHT - 70     // ç§»å‹•ç›®æ¨™Y
     };
-    let minPlayerY = HEIGHT * 0.5;       // ƒvƒŒƒCƒ„[‚ª“®‚¯‚éÅ¬YÀ•Wy•ÏX‰Â”\z
-    let maxPlayerY = HEIGHT - player.height; // ƒvƒŒƒCƒ„[‚ª“®‚¯‚éÅ‘åYÀ•Wy•ÏX‰Â”\z
-    // ƒvƒŒƒCƒ„[‚ÌFiƒ‰ƒCƒt‚É‰‚¶‚Ä•Ï‰»j‚ğ•Ô‚·ŠÖ”
+    let minPlayerY = HEIGHT * 0.5;       // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå‹•ã‘ã‚‹æœ€å°Yåº§æ¨™ã€å¤‰æ›´å¯èƒ½ã€‘
+    let maxPlayerY = HEIGHT - player.height; // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå‹•ã‘ã‚‹æœ€å¤§Yåº§æ¨™ã€å¤‰æ›´å¯èƒ½ã€‘
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è‰²ï¼ˆãƒ©ã‚¤ãƒ•ã«å¿œã˜ã¦å¤‰åŒ–ï¼‰ã‚’è¿”ã™é–¢æ•°
     function getPlayerColor(){
       if(player.life === 3) return "green";
       if(player.life === 2) return "yellow";
@@ -162,42 +162,42 @@
     }
 
     /********************
-     * ƒIƒuƒWƒFƒNƒgŒQ‚ÌéŒ¾
+     * ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç¾¤ã®å®£è¨€
      ********************/
-    let missiles = [];       // ƒvƒŒƒCƒ„[‚Ìƒ~ƒTƒCƒ‹
-    let enemies = [];        // ’Êí“G
-    let pulseEnemies = [];   // ƒpƒ‹ƒX“G
-    let splashGroups = [];   // ƒXƒvƒ‰ƒbƒVƒ…“GƒOƒ‹[ƒvy•ÏX‰Â”\z
-    let enemyBullets = [];   // “G’e
-    let explosions = [];     // ”š”­ƒGƒtƒFƒNƒg
-    let pulseWaves = [];     // ƒpƒ‹ƒX”giƒpƒ‹ƒX“G‚ª”­¶jy•ÏX‰Â”\z
-    let stars = [];          // ”wŒi‚Ì¯
-    // ”wŒi‚Éƒ‰ƒ“ƒ_ƒ€‚È¯‚ğ¶¬y•ÏX‰Â”\z
+    let missiles = [];       // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒŸã‚µã‚¤ãƒ«
+    let enemies = [];        // é€šå¸¸æ•µ
+    let pulseEnemies = [];   // ãƒ‘ãƒ«ã‚¹æ•µ
+    let splashGroups = [];   // ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥æ•µã‚°ãƒ«ãƒ¼ãƒ—ã€å¤‰æ›´å¯èƒ½ã€‘
+    let enemyBullets = [];   // æ•µå¼¾
+    let explosions = [];     // çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    let pulseWaves = [];     // ãƒ‘ãƒ«ã‚¹æ³¢ï¼ˆãƒ‘ãƒ«ã‚¹æ•µãŒç™ºç”Ÿï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
+    let stars = [];          // èƒŒæ™¯ã®æ˜Ÿ
+    // èƒŒæ™¯ã«ãƒ©ãƒ³ãƒ€ãƒ ãªæ˜Ÿã‚’ç”Ÿæˆã€å¤‰æ›´å¯èƒ½ã€‘
     for(let i = 0; i < 100; i++){
       stars.push({
         x: Math.random() * WIDTH,
         y: Math.random() * HEIGHT,
-        radius: Math.random() * 1.5 + 0.5, // ¯‚ÌƒTƒCƒYy•ÏX‰Â”\z
-        speed: Math.random() * 0.5 + 0.2,    // ¯‚Ì—‰º‘¬“xy•ÏX‰Â”\z
+        radius: Math.random() * 1.5 + 0.5, // æ˜Ÿã®ã‚µã‚¤ã‚ºã€å¤‰æ›´å¯èƒ½ã€‘
+        speed: Math.random() * 0.5 + 0.2,    // æ˜Ÿã®è½ä¸‹é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
         color: getRandomColor()
       });
     }
 
     /********************
-     * “GoŒ»ŠÇ—
+     * æ•µå‡ºç¾ç®¡ç†
      ********************/
     let enemySpawnTimer = 0;
-    let enemySpawnInterval = 2000; // “GoŒ»ŠÔŠuy•ÏX‰Â”\z
+    let enemySpawnInterval = 2000; // æ•µå‡ºç¾é–“éš”ã€å¤‰æ›´å¯èƒ½ã€‘
 
     /********************
-     * ”š”­ƒGƒtƒFƒNƒg‚Ì’è‹`
+     * çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å®šç¾©
      ********************/
     function Explosion(x, y) {
       this.x = x;
       this.y = y;
       this.particles = [];
       this.done = false;
-      // 20ŒÂ‚Ìƒp[ƒeƒBƒNƒ‹¶¬y•ÏX‰Â”\z
+      // 20å€‹ã®ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆã€å¤‰æ›´å¯èƒ½ã€‘
       for(let i = 0; i < 20; i++){
         let angle = Math.random() * Math.PI * 2;
         let speed = Math.random() * 3 + 2;
@@ -207,7 +207,7 @@
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
           radius: Math.random() * 2 + 1,
-          life: 1000,    // ƒp[ƒeƒBƒNƒ‹õ–½y•ÏX‰Â”\z
+          life: 1000,    // ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«å¯¿å‘½ã€å¤‰æ›´å¯èƒ½ã€‘
           alpha: 1
         });
       }
@@ -219,7 +219,7 @@
         p.life -= dt;
         p.alpha = p.life / 1000;
       });
-      // õ–½‚ªs‚«‚½ƒp[ƒeƒBƒNƒ‹‚ğíœ
+      // å¯¿å‘½ãŒå°½ããŸãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’å‰Šé™¤
       this.particles = this.particles.filter(p => p.life > 0);
       if(this.particles.length === 0) { this.done = true; }
     };
@@ -234,15 +234,15 @@
       });
       ctx.restore();
     };
-    // w’èˆÊ’u‚É”š”­ƒGƒtƒFƒNƒg‚ğ¶¬y•ÏX‰Â”\z
+    // æŒ‡å®šä½ç½®ã«çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã€å¤‰æ›´å¯èƒ½ã€‘
     function createExplosion(x, y) {
       explosions.push(new Explosion(x, y));
     }
 
     /********************
-     * •`‰æ—pŠÖ”
+     * æç”»ç”¨é–¢æ•°
      ********************/
-    // ’Êí“G‚ğ‰ñ“]‚·‚éOŠpŒ`‚Å•`‰æy•ÏX‰Â”\z
+    // é€šå¸¸æ•µã‚’å›è»¢ã™ã‚‹ä¸‰è§’å½¢ã§æç”»ã€å¤‰æ›´å¯èƒ½ã€‘
     function drawTriangle(x, y, size, angle) {
       ctx.save();
       ctx.translate(x + size / 2, y + size / 2);
@@ -258,7 +258,7 @@
       ctx.stroke();
       ctx.restore();
     }
-    // ƒvƒŒƒCƒ„[ií“¬‹@•—j•`‰æy•ÏX‰Â”\z
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ï¼ˆæˆ¦é—˜æ©Ÿé¢¨ï¼‰æç”»ã€å¤‰æ›´å¯èƒ½ã€‘
     function drawFighter(x, y, width, height) {
       ctx.save();
       ctx.translate(x, y);
@@ -278,17 +278,17 @@
       ctx.stroke();
       ctx.restore();
     }
-    // Æ€ƒ}[ƒN•`‰æiƒvƒŒƒCƒ„[ã•û‚É•\¦jy•ÏX‰Â”\z
+    // ç…§æº–ãƒãƒ¼ã‚¯æç”»ï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ä¸Šæ–¹ã«è¡¨ç¤ºï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
     function drawReticle() {
       const reticleCenterX = player.x + player.width / 2;
       const reticleCenterY = player.y + player.height / 2 - 200;
       let color = "white";
-      // ‹ß‚­‚É’Êí“G‚ª‚¢‚é‚ÆÔ‚­“_–Åy•ÏX‰Â”\z
+      // è¿‘ãã«é€šå¸¸æ•µãŒã„ã‚‹ã¨èµ¤ãç‚¹æ»…ã€å¤‰æ›´å¯èƒ½ã€‘
       if(isEnemyAligned()){
         if(Math.floor(Date.now() / 100) % 2 === 0){
           color = "red";
         } else {
-          return; // ”ñ•\¦ƒ^ƒCƒ~ƒ“ƒO
+          return; // éè¡¨ç¤ºã‚¿ã‚¤ãƒŸãƒ³ã‚°
         }
       }
       ctx.save();
@@ -309,7 +309,7 @@
       ctx.setLineDash([]);
       ctx.restore();
     }
-    // ƒvƒŒƒCƒ„[‚Æ’Êí“G‚Ì’†SXÀ•W‚ª‹ß‚¢‚©”»’èy•ÏX‰Â”\z
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨é€šå¸¸æ•µã®ä¸­å¿ƒXåº§æ¨™ãŒè¿‘ã„ã‹åˆ¤å®šã€å¤‰æ›´å¯èƒ½ã€‘
     function isEnemyAligned(){
       const playerCenterX = player.x + player.width / 2;
       for(let i = 0; i < enemies.length; i++){
@@ -322,32 +322,32 @@
     }
 
     /********************
-     * ƒfƒ‚ƒ‚[ƒhŠÖ˜A
+     * ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰é–¢é€£
      ********************/
-    let demoDirection = 1;  // ƒvƒŒƒCƒ„[©“®ˆÚ“®•ûŒüy•ÏX‰Â”\z
-    let demoFireTimer = 0;  // ©“®ËŒ‚—pƒ^ƒCƒ}[y•ÏX‰Â”\z
+    let demoDirection = 1;  // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è‡ªå‹•ç§»å‹•æ–¹å‘ã€å¤‰æ›´å¯èƒ½ã€‘
+    let demoFireTimer = 0;  // è‡ªå‹•å°„æ’ƒç”¨ã‚¿ã‚¤ãƒãƒ¼ã€å¤‰æ›´å¯èƒ½ã€‘
 
     /********************
-     * ƒQ[ƒ€ƒŠƒZƒbƒgŠÖ”
+     * ã‚²ãƒ¼ãƒ ãƒªã‚»ãƒƒãƒˆé–¢æ•°
      ********************/
     function resetGame(){
       score = 0;
       stage = 1;
-      timer = 30;              // §ŒÀŠÔy•ÏX‰Â”\z
+      timer = 30;              // åˆ¶é™æ™‚é–“ã€å¤‰æ›´å¯èƒ½ã€‘
       timerAccumulator = 0;
       paused = false;
       stageCleared = false;
       enemySpawnTimer = 0;
-      enemySpawnInterval = 2000; // “GoŒ»ŠÔŠuy•ÏX‰Â”\z
+      enemySpawnInterval = 2000; // æ•µå‡ºç¾é–“éš”ã€å¤‰æ›´å¯èƒ½ã€‘
       enemyBulletIntervalMultiplier = 1.0;
       enemyRotationMultiplier = 1.0;
-      // ƒvƒŒƒCƒ„[‰ŠúˆÊ’uEƒ‰ƒCƒtÄİ’èy•ÏX‰Â”\z
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åˆæœŸä½ç½®ãƒ»ãƒ©ã‚¤ãƒ•å†è¨­å®šã€å¤‰æ›´å¯èƒ½ã€‘
       player.x = WIDTH / 2 - player.width / 2;
       player.y = HEIGHT - 70;
       player.targetX = player.x;
       player.targetY = player.y;
       player.life = 3;
-      // ƒIƒuƒWƒFƒNƒgŒQ‰Šú‰»
+      // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç¾¤åˆæœŸåŒ–
       missiles = [];
       enemies = [];
       pulseEnemies = [];
@@ -358,11 +358,11 @@
     }
 
     /********************
-     * ƒƒCƒ“ƒQ[ƒ€ƒ‹[ƒv
+     * ãƒ¡ã‚¤ãƒ³ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—
      ********************/
     let lastTime = 0;
     function gameLoop(timestamp) {
-      let dt = timestamp - lastTime; // ‘OƒtƒŒ[ƒ€‚©‚ç‚ÌŒo‰ßŠÔy•ÏX‰Â”\z
+      let dt = timestamp - lastTime; // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®çµŒéæ™‚é–“ã€å¤‰æ›´å¯èƒ½ã€‘
       lastTime = timestamp;
       if(gameState === "demo"){
         updateDemo(dt);
@@ -377,18 +377,18 @@
     requestAnimationFrame(gameLoop);
 
     /********************
-     * ƒfƒ‚ƒ‚[ƒhXV
+     * ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰æ›´æ–°
      ********************/
     function updateDemo(dt) {
-      // ƒvƒŒƒCƒ„[‚ª‰æ–Ê’[‚É“’B‚µ‚½‚çˆÚ“®•ûŒü”½“]y•ÏX‰Â”\z
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç”»é¢ç«¯ã«åˆ°é”ã—ãŸã‚‰ç§»å‹•æ–¹å‘åè»¢ã€å¤‰æ›´å¯èƒ½ã€‘
       if(player.x <= 0) { demoDirection = 1; }
       else if(player.x >= WIDTH - player.width) { demoDirection = -1; }
       player.x += player.speed * demoDirection;
-      player.y = HEIGHT - 70;  // cˆÊ’uŒÅ’èy•ÏX‰Â”\z
+      player.y = HEIGHT - 70;  // ç¸¦ä½ç½®å›ºå®šã€å¤‰æ›´å¯èƒ½ã€‘
       player.targetX = player.x;
       player.targetY = player.y;
       demoFireTimer += dt;
-      // 500ms‚²‚Æ‚Éƒ~ƒTƒCƒ‹”­Ëy•ÏX‰Â”\z
+      // 500msã”ã¨ã«ãƒŸã‚µã‚¤ãƒ«ç™ºå°„ã€å¤‰æ›´å¯èƒ½ã€‘
       if(demoFireTimer >= 500){
         missiles.push({
           x: player.x + player.width / 2 - 2.5,
@@ -403,14 +403,14 @@
     }
 
     /********************
-     * ƒvƒŒƒC’†XV
+     * ãƒ—ãƒ¬ã‚¤ä¸­æ›´æ–°
      ********************/
     function updatePlaying(dt) {
       if(paused) {
         pauseTimeRemaining -= dt;
         if(pauseTimeRemaining <= 0 && stageCleared) {
           stage++;
-          // ƒXƒe[ƒWis‚É”º‚¤“ïˆÕ“x’²®y•ÏX‰Â”\z
+          // ã‚¹ãƒ†ãƒ¼ã‚¸é€²è¡Œã«ä¼´ã†é›£æ˜“åº¦èª¿æ•´ã€å¤‰æ›´å¯èƒ½ã€‘
           if(stage > 1 && stage % 10 === 1) {
             enemyRotationMultiplier = 1.0;
             enemyBulletIntervalMultiplier = 1.0;
@@ -427,18 +427,18 @@
         }
         return;
       }
-      // ƒL[“ü—Í‚É‚æ‚éƒvƒŒƒCƒ„[ˆÚ“®y•ÏX‰Â”\z
+      // ã‚­ãƒ¼å…¥åŠ›ã«ã‚ˆã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç§»å‹•ã€å¤‰æ›´å¯èƒ½ã€‘
       if(keys["ArrowLeft"]) { player.x -= player.speed; player.targetX = player.x; }
       if(keys["ArrowRight"]) { player.x += player.speed; player.targetX = player.x; }
       if(keys["ArrowUp"]) { player.y -= player.speed; player.targetY = player.y; }
       if(keys["ArrowDown"]) { player.y += player.speed; player.targetY = player.y; }
-      // ƒ^[ƒQƒbƒgˆÊ’u‚ÉƒXƒ€[ƒY‚ÉˆÚ“®y•ÏX‰Â”\z
+      // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆä½ç½®ã«ã‚¹ãƒ ãƒ¼ã‚ºã«ç§»å‹•ã€å¤‰æ›´å¯èƒ½ã€‘
       if(Math.abs(player.targetX - player.x) > 1) { player.x += (player.targetX - player.x) * 0.2; }
       if(Math.abs(player.targetY - player.y) > 1) { player.y += (player.targetY - player.y) * 0.2; }
-      // ‰æ–Ê’[‚Éû‚Ü‚é‚æ‚¤‚É§ŒÀy•ÏX‰Â”\z
+      // ç”»é¢ç«¯ã«åã¾ã‚‹ã‚ˆã†ã«åˆ¶é™ã€å¤‰æ›´å¯èƒ½ã€‘
       player.x = Math.max(0, Math.min(WIDTH - player.width, player.x));
       player.y = Math.max(minPlayerY, Math.min(maxPlayerY, player.y));
-      // ƒXƒy[ƒXƒL[‚Åƒ~ƒTƒCƒ‹”­Ëy•ÏX‰Â”\z
+      // ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼ã§ãƒŸã‚µã‚¤ãƒ«ç™ºå°„ã€å¤‰æ›´å¯èƒ½ã€‘
       if(keys["Space"] && canShoot) {
         missiles.push({
           x: player.x + player.width / 2 - 2.5,
@@ -453,7 +453,7 @@
     }
 
     /********************
-     * ƒQ[ƒ€ƒI[ƒo[XV
+     * ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ›´æ–°
      ********************/
     function updateGameOver(dt) {
       gameOverTimer -= dt;
@@ -464,29 +464,29 @@
     }
 
     /********************
-     * ‹¤’ÊXVˆ—
+     * å…±é€šæ›´æ–°å‡¦ç†
      ********************/
     function updateCommon(dt) {
       timerAccumulator += dt;
-      // 1•b‚²‚Æ‚Éƒ^ƒCƒ}[‚ÆƒXƒRƒAXVy•ÏX‰Â”\z
+      // 1ç§’ã”ã¨ã«ã‚¿ã‚¤ãƒãƒ¼ã¨ã‚¹ã‚³ã‚¢æ›´æ–°ã€å¤‰æ›´å¯èƒ½ã€‘
       while(timerAccumulator >= 1000){
         timerAccumulator -= 1000;
         timer--;
         score++;
       }
-      // ƒ^ƒCƒ}[‚ª0‚É‚È‚Á‚½‚çƒXƒe[ƒWƒNƒŠƒA
+      // ã‚¿ã‚¤ãƒãƒ¼ãŒ0ã«ãªã£ãŸã‚‰ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢
       if(timer <= 0 && !stageCleared) {
         stageCleared = true;
         paused = true;
-        pauseTimeRemaining = 2000; // 2•bˆê’â~y•ÏX‰Â”\z
+        pauseTimeRemaining = 2000; // 2ç§’ä¸€æ™‚åœæ­¢ã€å¤‰æ›´å¯èƒ½ã€‘
         score += 100;
-        // ŠeƒIƒuƒWƒFƒNƒg‚É‘Î‚µ‚Ä”š”­ƒGƒtƒFƒNƒg‚ğ”­¶
+        // å„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å¯¾ã—ã¦çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç™ºç”Ÿ
         missiles.forEach(m => { createExplosion(m.x + m.width / 2, m.y + m.height / 2); });
         enemyBullets.forEach(b => { createExplosion(b.x, b.y); });
         enemies.forEach(e => { createExplosion(e.x + e.size / 2, e.y + e.size / 2); });
         pulseEnemies.forEach(e => { createExplosion(e.x + e.size / 2, e.y + e.size / 2); });
         splashGroups.forEach(g => { createExplosion(g.centerX, g.centerY); });
-        // ‚±‚±‚Åc‚Á‚½ƒpƒ‹ƒX”g‚àƒNƒŠƒA‚·‚é
+        // ã“ã“ã§æ®‹ã£ãŸãƒ‘ãƒ«ã‚¹æ³¢ã‚‚ã‚¯ãƒªã‚¢ã™ã‚‹
         pulseWaves = [];
         missiles = [];
         enemyBullets = [];
@@ -494,63 +494,63 @@
         pulseEnemies = [];
         splashGroups = [];
       }
-      // ƒ~ƒTƒCƒ‹‚ÌˆÚ“®y•ÏX‰Â”\z
+      // ãƒŸã‚µã‚¤ãƒ«ã®ç§»å‹•ã€å¤‰æ›´å¯èƒ½ã€‘
       missiles.forEach(m => { m.y -= m.speed; });
       missiles = missiles.filter(m => m.y + m.height > 0);
 
       /********************
-       * “GoŒ»ˆ—
+       * æ•µå‡ºç¾å‡¦ç†
        ********************/
       enemySpawnTimer += dt;
       if(enemySpawnTimer > enemySpawnInterval) {
         enemySpawnTimer = 0;
-        let enemySize = 60; // “GƒTƒCƒYy•ÏX‰Â”\z
+        let enemySize = 60; // æ•µã‚µã‚¤ã‚ºã€å¤‰æ›´å¯èƒ½ã€‘
         let minEnemyX = WIDTH * 0.05;
         let maxEnemyX = WIDTH * 0.95 - enemySize;
         let spawnX = minEnemyX + Math.random() * (maxEnemyX - minEnemyX);
         let r = Math.random();
         if(r < 0.2) {
-          // ƒpƒ‹ƒX“GoŒ»i20%j
+          // ãƒ‘ãƒ«ã‚¹æ•µå‡ºç¾ï¼ˆ20%ï¼‰
           pulseEnemies.push({
             type: "pulse",
             x: spawnX,
-            y: -enemySize, // ‰æ–Êã•”ŠO‚©‚çoŒ»y•ÏX‰Â”\z
+            y: -enemySize, // ç”»é¢ä¸Šéƒ¨å¤–ã‹ã‚‰å‡ºç¾ã€å¤‰æ›´å¯èƒ½ã€‘
             size: enemySize,
-            speed: 1.0, // ‰º•ûŒüˆÚ“®‘¬“xy•ÏX‰Â”\z
-            targetY: HEIGHT * 0.3, // “’BˆÊ’uy•ÏX‰Â”\z
-            pulseTimer: 1000,  // Ÿ‚Ìƒpƒ‹ƒX”g”­¶‘Ò‚¿ŠÔimsjy•ÏX‰Â”\z
-            pulseInterval: 1000  // ƒpƒ‹ƒX”g”­¶ŠÔŠuimsjy•ÏX‰Â”\z
+            speed: 1.0, // ä¸‹æ–¹å‘ç§»å‹•é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
+            targetY: HEIGHT * 0.3, // åˆ°é”ä½ç½®ã€å¤‰æ›´å¯èƒ½ã€‘
+            pulseTimer: 1000,  // æ¬¡ã®ãƒ‘ãƒ«ã‚¹æ³¢ç™ºç”Ÿå¾…ã¡æ™‚é–“ï¼ˆmsï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
+            pulseInterval: 1000  // ãƒ‘ãƒ«ã‚¹æ³¢ç™ºç”Ÿé–“éš”ï¼ˆmsï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
           });
         } else if(stage >= 3 && r < 0.35) {
-          // ƒXƒvƒ‰ƒbƒVƒ…“GƒOƒ‹[ƒvoŒ»iƒXƒe[ƒW3ˆÈãA–ñ15%j
+          // ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥æ•µã‚°ãƒ«ãƒ¼ãƒ—å‡ºç¾ï¼ˆã‚¹ãƒ†ãƒ¼ã‚¸3ä»¥ä¸Šã€ç´„15%ï¼‰
           splashGroups.push({
             type: "splashGroup",
             centerX: spawnX,
-            centerY: -enemySize, // oŒ»ˆÊ’uy•ÏX‰Â”\z
-            baseAngle: Math.random() * 2 * Math.PI, // ‰ŠúŠp“xy•ÏX‰Â”\z
-            rotationSpeed: 0.002, // ‰ñ“]‘¬“xiƒ‰ƒWƒAƒ“/msjy•ÏX‰Â”\z
-            radius: enemySize * 0.75, // ’†S‚©‚ç’¸“_‚Ü‚Å‚Ì‹——£y•ÏX‰Â”\z
-            speed: 1.5, // ‰º•ûŒüˆÚ“®‘¬“xy•ÏX‰Â”\z
+            centerY: -enemySize, // å‡ºç¾ä½ç½®ã€å¤‰æ›´å¯èƒ½ã€‘
+            baseAngle: Math.random() * 2 * Math.PI, // åˆæœŸè§’åº¦ã€å¤‰æ›´å¯èƒ½ã€‘
+            rotationSpeed: 0.002, // å›è»¢é€Ÿåº¦ï¼ˆãƒ©ã‚¸ã‚¢ãƒ³/msï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
+            radius: enemySize * 0.75, // ä¸­å¿ƒã‹ã‚‰é ‚ç‚¹ã¾ã§ã®è·é›¢ã€å¤‰æ›´å¯èƒ½ã€‘
+            speed: 1.5, // ä¸‹æ–¹å‘ç§»å‹•é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
             size: enemySize
           });
         } else {
-          // ’Êí“GoŒ»
+          // é€šå¸¸æ•µå‡ºç¾
           let effectiveStage = (stage > 1 && stage % 10 === 1) ? 1 : (stage % 10 === 0 ? 10 : stage % 10);
           enemies.push({
             type: "normal",
             x: spawnX,
             y: -enemySize,
             size: enemySize,
-            speed: (1 + (effectiveStage - 1) * 0.2) * 1.5, // ‘¬“xy•ÏX‰Â”\z
-            bulletTimer: (Math.random() * 2000 + 1000) * enemyBulletIntervalMultiplier, // “G’e”­Ëƒ^ƒCƒ}[y•ÏX‰Â”\z
+            speed: (1 + (effectiveStage - 1) * 0.2) * 1.5, // é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
+            bulletTimer: (Math.random() * 2000 + 1000) * enemyBulletIntervalMultiplier, // æ•µå¼¾ç™ºå°„ã‚¿ã‚¤ãƒãƒ¼ã€å¤‰æ›´å¯èƒ½ã€‘
             angle: 0,
-            rotationSpeed: ((Math.random() * 0.05 + 0.02) * 3) * enemyRotationMultiplier // ‰ñ“]‘¬“xy•ÏX‰Â”\z
+            rotationSpeed: ((Math.random() * 0.05 + 0.02) * 3) * enemyRotationMultiplier // å›è»¢é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
           });
         }
       }
 
       /********************
-       * ’Êí“G‚ÌXV
+       * é€šå¸¸æ•µã®æ›´æ–°
        ********************/
       enemies.forEach(enemy => {
         enemy.y += enemy.speed;
@@ -560,17 +560,17 @@
           if(enemy.y < HEIGHT * 0.8) {
             let spawnX = enemy.x + enemy.size / 2;
             let spawnY = enemy.y + enemy.size;
-            // ƒvƒŒƒCƒ„[’†S‚ÉŒü‚©‚Á‚Ä’e”­Ë
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ä¸­å¿ƒã«å‘ã‹ã£ã¦å¼¾ç™ºå°„
             let targetX = player.x + player.width / 2;
             let targetY = player.y + player.height / 2;
             let dx = targetX - spawnX;
             let dy = targetY - spawnY;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            let bulletSpeed = 3 + (stage - 1) * 0.2; // ’e‘¬“xy•ÏX‰Â”\z
+            let bulletSpeed = 3 + (stage - 1) * 0.2; // å¼¾é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
             enemyBullets.push({
               x: spawnX,
               y: spawnY,
-              radius: 5, // ’e‚Ì”¼Œay•ÏX‰Â”\z
+              radius: 5, // å¼¾ã®åŠå¾„ã€å¤‰æ›´å¯èƒ½ã€‘
               speedX: bulletSpeed * (dx / distance),
               speedY: bulletSpeed * (dy / distance)
             });
@@ -580,15 +580,15 @@
       });
 
       /********************
-       * ƒpƒ‹ƒX“G‚ÌXV
+       * ãƒ‘ãƒ«ã‚¹æ•µã®æ›´æ–°
        ********************/
       pulseEnemies.forEach(enemy => {
-        // w’èˆÊ’u‚É“’B‚·‚é‚Ü‚Å‰º•ûŒüˆÚ“®y•ÏX‰Â”\z
+        // æŒ‡å®šä½ç½®ã«åˆ°é”ã™ã‚‹ã¾ã§ä¸‹æ–¹å‘ç§»å‹•ã€å¤‰æ›´å¯èƒ½ã€‘
         if(enemy.y < enemy.targetY) {
           enemy.y += enemy.speed;
         } else {
           enemy.pulseTimer -= dt;
-          // ƒvƒŒƒCƒ„[’Ç”öˆ—y•ÏX‰Â”\z
+          // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¿½å°¾å‡¦ç†ã€å¤‰æ›´å¯èƒ½ã€‘
           let enemyCenterX = enemy.x + enemy.size / 2;
           let enemyCenterY = enemy.y + enemy.size / 2;
           let playerCenterX = player.x + player.width / 2;
@@ -597,41 +597,41 @@
           let dy = playerCenterY - enemyCenterY;
           let distance = Math.sqrt(dx * dx + dy * dy);
           if(distance > 0) {
-            let chaseSpeed = 0.5; // ’Ç”ö‘¬“xy•ÏX‰Â”\z
+            let chaseSpeed = 0.5; // è¿½å°¾é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
             enemy.x += (dx / distance) * chaseSpeed;
             enemy.y += (dy / distance) * chaseSpeed;
           }
-          // ƒpƒ‹ƒX”g”­¶ƒ^ƒCƒ~ƒ“ƒO
+          // ãƒ‘ãƒ«ã‚¹æ³¢ç™ºç”Ÿã‚¿ã‚¤ãƒŸãƒ³ã‚°
           if(enemy.pulseTimer <= 0) {
             pulseWaves.push({
               x: enemy.x + enemy.size / 2,
               y: enemy.y + enemy.size / 2,
-              initialRadius: 10,   // ‰Šú”¼Œay•ÏX‰Â”\z
+              initialRadius: 10,   // åˆæœŸåŠå¾„ã€å¤‰æ›´å¯èƒ½ã€‘
               radius: 10,
-              expansionSpeed: 0.1, // Šg‘å‘¬“xy•ÏX‰Â”\z
-              maxRadius: 300,      // ƒpƒ‹ƒX”g‚ÌÅ‘å”¼Œa‚ğ300‚É•ÏXy•ÏX‰Â”\z
+              expansionSpeed: 0.1, // æ‹¡å¤§é€Ÿåº¦ã€å¤‰æ›´å¯èƒ½ã€‘
+              maxRadius: 300,      // ãƒ‘ãƒ«ã‚¹æ³¢ã®æœ€å¤§åŠå¾„ã‚’300ã«å¤‰æ›´ã€å¤‰æ›´å¯èƒ½ã€‘
               damaged: false
             });
-            enemy.pulseTimer = enemy.pulseInterval; // ƒ^ƒCƒ}[ƒŠƒZƒbƒgy•ÏX‰Â”\z
+            enemy.pulseTimer = enemy.pulseInterval; // ã‚¿ã‚¤ãƒãƒ¼ãƒªã‚»ãƒƒãƒˆã€å¤‰æ›´å¯èƒ½ã€‘
           }
         }
       });
 
       /********************
-       * ƒXƒvƒ‰ƒbƒVƒ…“GƒOƒ‹[ƒv‚ÌXV
+       * ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥æ•µã‚°ãƒ«ãƒ¼ãƒ—ã®æ›´æ–°
        ********************/
       splashGroups.forEach(group => {
-        group.centerY += group.speed; // ‰º•ûŒüˆÚ“®y•ÏX‰Â”\z
-        group.baseAngle += group.rotationSpeed * dt; // ‰ñ“]y•ÏX‰Â”\z
+        group.centerY += group.speed; // ä¸‹æ–¹å‘ç§»å‹•ã€å¤‰æ›´å¯èƒ½ã€‘
+        group.baseAngle += group.rotationSpeed * dt; // å›è»¢ã€å¤‰æ›´å¯èƒ½ã€‘
       });
 
-      // ‰æ–ÊŠO‚Éo‚½“G‚Ìíœy•ÏX‰Â”\z
+      // ç”»é¢å¤–ã«å‡ºãŸæ•µã®å‰Šé™¤ã€å¤‰æ›´å¯èƒ½ã€‘
       enemies = enemies.filter(e => e.y < HEIGHT + e.size);
       pulseEnemies = pulseEnemies.filter(e => e.y < HEIGHT + e.size);
       splashGroups = splashGroups.filter(g => g.centerY < HEIGHT + g.size);
 
       /********************
-       * “G’e‚ÌXV
+       * æ•µå¼¾ã®æ›´æ–°
        ********************/
       enemyBullets.forEach(bullet => {
         bullet.x += bullet.speedX;
@@ -640,9 +640,9 @@
       enemyBullets = enemyBullets.filter(b => b.x >= 0 && b.x <= WIDTH && b.y <= HEIGHT + b.radius);
 
       /********************
-       * ƒ~ƒTƒCƒ‹‚Æ“G‚ÌÕ“Ë”»’è
+       * ãƒŸã‚µã‚¤ãƒ«ã¨æ•µã®è¡çªåˆ¤å®š
        ********************/
-      // ƒ~ƒTƒCƒ‹‚Æ’Êí“G‚ÌÕ“Ë
+      // ãƒŸã‚µã‚¤ãƒ«ã¨é€šå¸¸æ•µã®è¡çª
       for(let i = missiles.length - 1; i >= 0; i--){
         let m = missiles[i];
         for(let j = enemies.length - 1; j >= 0; j--){
@@ -656,7 +656,7 @@
           }
         }
       }
-      // ƒ~ƒTƒCƒ‹‚Æƒpƒ‹ƒX“G‚ÌÕ“Ë
+      // ãƒŸã‚µã‚¤ãƒ«ã¨ãƒ‘ãƒ«ã‚¹æ•µã®è¡çª
       for(let i = missiles.length - 1; i >= 0; i--){
         let m = missiles[i];
         for(let j = pulseEnemies.length - 1; j >= 0; j--){
@@ -670,13 +670,13 @@
           }
         }
       }
-      // ƒ~ƒTƒCƒ‹‚ÆƒXƒvƒ‰ƒbƒVƒ…“GƒOƒ‹[ƒv‚ÌÕ“Ë••ª—ôˆ—
+      // ãƒŸã‚µã‚¤ãƒ«ã¨ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥æ•µã‚°ãƒ«ãƒ¼ãƒ—ã®è¡çªï¼†åˆ†è£‚å‡¦ç†
       for(let i = missiles.length - 1; i >= 0; i--){
         let m = missiles[i];
         for(let j = splashGroups.length - 1; j >= 0; j--){
           let group = splashGroups[j];
           let hit = false;
-          // 3‘Ì•ª‚ÌÕ“Ëƒ`ƒFƒbƒNiŠe’¸“_‚ğ‰~‚Æ‚µ‚Äˆµ‚¤j
+          // 3ä½“åˆ†ã®è¡çªãƒã‚§ãƒƒã‚¯ï¼ˆå„é ‚ç‚¹ã‚’å††ã¨ã—ã¦æ‰±ã†ï¼‰
           for(let k = 0; k < 3; k++){
             let angle = group.baseAngle + k * (2 * Math.PI / 3);
             let enemyX = group.centerX + group.radius * Math.cos(angle);
@@ -689,14 +689,14 @@
           }
           if(hit){
             createExplosion(group.centerX, group.centerY);
-            // •ª—ôˆ—FƒTƒCƒY‚ª\•ª‘å‚«‚¯‚ê‚Î2‚Â‚Ì¬Œ^ƒOƒ‹[ƒv‚É•ª—ôy•ÏX‰Â”\z
+            // åˆ†è£‚å‡¦ç†ï¼šã‚µã‚¤ã‚ºãŒååˆ†å¤§ãã‘ã‚Œã°2ã¤ã®å°å‹ã‚°ãƒ«ãƒ¼ãƒ—ã«åˆ†è£‚ã€å¤‰æ›´å¯èƒ½ã€‘
             if(group.size > 30){
               let newSize = group.size / 2;
               splashGroups.push({
                 type: "splashGroup",
                 centerX: group.centerX,
                 centerY: group.centerY,
-                baseAngle: 0, // ‰ŠúŠp“xy•ÏX‰Â”\z
+                baseAngle: 0, // åˆæœŸè§’åº¦ã€å¤‰æ›´å¯èƒ½ã€‘
                 rotationSpeed: group.rotationSpeed,
                 radius: newSize * 0.75,
                 speed: group.speed,
@@ -706,7 +706,7 @@
                 type: "splashGroup",
                 centerX: group.centerX,
                 centerY: group.centerY,
-                baseAngle: Math.PI, // 180“x‚¸‚ç‚·y•ÏX‰Â”\z
+                baseAngle: Math.PI, // 180åº¦ãšã‚‰ã™ã€å¤‰æ›´å¯èƒ½ã€‘
                 rotationSpeed: group.rotationSpeed,
                 radius: newSize * 0.75,
                 speed: group.speed,
@@ -722,7 +722,7 @@
       }
 
       /********************
-       * “G‚ÆƒvƒŒƒCƒ„[‚ÌÕ“Ë”»’è
+       * æ•µã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡çªåˆ¤å®š
        ********************/
       for(let i = enemies.length - 1; i >= 0; i--){
         let enemy = enemies[i];
@@ -748,7 +748,7 @@
           }
         }
       }
-      // ƒXƒvƒ‰ƒbƒVƒ…“GƒOƒ‹[ƒv‚ÆƒvƒŒƒCƒ„[‚ÌÕ“Ë”»’èiŠe’¸“_‚²‚Æ‚Éƒ`ƒFƒbƒNj
+      // ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥æ•µã‚°ãƒ«ãƒ¼ãƒ—ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡çªåˆ¤å®šï¼ˆå„é ‚ç‚¹ã”ã¨ã«ãƒã‚§ãƒƒã‚¯ï¼‰
       for(let j = splashGroups.length - 1; j >= 0; j--){
         let group = splashGroups[j];
         for(let k = 0; k < 3; k++){
@@ -768,7 +768,7 @@
           }
         }
       }
-      // “G’e‚ÆƒvƒŒƒCƒ„[‚ÌÕ“Ë
+      // æ•µå¼¾ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡çª
       for(let i = enemyBullets.length - 1; i >= 0; i--){
         let bullet = enemyBullets[i];
         if(rectCircleIntersect(player, bullet)){
@@ -783,17 +783,17 @@
       }
 
       /********************
-       * ƒpƒ‹ƒX”g‚ÌXV‚ÆÕ“Ë”»’è
+       * ãƒ‘ãƒ«ã‚¹æ³¢ã®æ›´æ–°ã¨è¡çªåˆ¤å®š
        ********************/
       pulseWaves.forEach(wave => {
-        // dt‚ğ‚©‚¯‚Ä”¼ŒaŠg‘åy•ÏX‰Â”\z
+        // dtã‚’ã‹ã‘ã¦åŠå¾„æ‹¡å¤§ã€å¤‰æ›´å¯èƒ½ã€‘
         wave.radius += wave.expansionSpeed * dt;
         let progress = (wave.radius - wave.initialRadius) / (wave.maxRadius - wave.initialRadius);
         wave.alpha = 1 - progress;
       });
-      // ƒpƒ‹ƒX”g‚ªÅ‘å”¼Œa‚É’B‚µ‚½‚çíœ
+      // ãƒ‘ãƒ«ã‚¹æ³¢ãŒæœ€å¤§åŠå¾„ã«é”ã—ãŸã‚‰å‰Šé™¤
       pulseWaves = pulseWaves.filter(wave => wave.radius < wave.maxRadius);
-      // ƒpƒ‹ƒX”g‚ÆƒvƒŒƒCƒ„[‚ÌÕ“Ë”»’è
+      // ãƒ‘ãƒ«ã‚¹æ³¢ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡çªåˆ¤å®š
       pulseWaves.forEach(wave => {
         let playerCenterX = player.x + player.width / 2;
         let playerCenterY = player.y + player.height / 2;
@@ -813,13 +813,13 @@
       });
 
       /********************
-       * ”š”­ƒGƒtƒFƒNƒg‚ÌXV
+       * çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æ›´æ–°
        ********************/
       explosions.forEach(exp => { exp.update(dt); });
       explosions = explosions.filter(exp => !exp.done);
 
       /********************
-       * ”wŒi¯‚ÌXV
+       * èƒŒæ™¯æ˜Ÿã®æ›´æ–°
        ********************/
       stars.forEach(star => {
         star.y += star.speed * 1.5;
@@ -832,16 +832,16 @@
     }
 
     /********************
-     * Õ“Ë”»’èŠÖ”
+     * è¡çªåˆ¤å®šé–¢æ•°
      ********************/
-    // ‹éŒ`“¯m‚ÌÕ“Ë”»’èy•ÏX‰Â”\z
+    // çŸ©å½¢åŒå£«ã®è¡çªåˆ¤å®šã€å¤‰æ›´å¯èƒ½ã€‘
     function rectIntersect(a, b) {
       return a.x < b.x + b.width &&
              a.x + a.width > b.x &&
              a.y < b.y + b.height &&
              a.y + a.height > b.y;
     }
-    // ‹éŒ`‚Æ‰~‚ÌÕ“Ë”»’èy•ÏX‰Â”\z
+    // çŸ©å½¢ã¨å††ã®è¡çªåˆ¤å®šã€å¤‰æ›´å¯èƒ½ã€‘
     function rectCircleIntersect(rect, circle) {
       let closestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
       let closestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
@@ -851,18 +851,18 @@
     }
 
     /********************
-     * •`‰æˆ—
+     * æç”»å‡¦ç†
      ********************/
     function draw() {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
-      // ”wŒi¯•`‰æy•ÏX‰Â”\z
+      // èƒŒæ™¯æ˜Ÿæç”»ã€å¤‰æ›´å¯èƒ½ã€‘
       stars.forEach(star => {
         ctx.fillStyle = star.color;
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         ctx.fill();
       });
-      // ƒ^ƒbƒ`‹OÕ•`‰æ
+      // ã‚¿ãƒƒãƒè»Œè·¡æç”»
       if(isSwiping && swipeTrail.length > 0) {
         ctx.strokeStyle = "rgba(255,255,255,0.5)";
         ctx.lineWidth = 3;
@@ -873,21 +873,21 @@
         }
         ctx.stroke();
       }
-      // ƒQ[ƒ€ƒI[ƒo[‚Å‚È‚¯‚ê‚ÎƒvƒŒƒCƒ„[‚ÆÆ€•`‰æ
+      // ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã§ãªã‘ã‚Œã°ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ç…§æº–æç”»
       if(gameState !== "gameover") {
         drawFighter(player.x, player.y, player.width, player.height);
         drawReticle();
       }
-      // ƒvƒŒƒCƒ„[‚Ìƒ~ƒTƒCƒ‹•`‰æiƒVƒAƒ“Fjy•ÏX‰Â”\z
+      // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒŸã‚µã‚¤ãƒ«æç”»ï¼ˆã‚·ã‚¢ãƒ³è‰²ï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
       ctx.fillStyle = "cyan";
       missiles.forEach(m => {
         ctx.fillRect(m.x, m.y, m.width, m.height);
       });
-      // ’Êí“G•`‰æi‰ñ“]OŠpŒ`jy•ÏX‰Â”\z
+      // é€šå¸¸æ•µæç”»ï¼ˆå›è»¢ä¸‰è§’å½¢ï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
       enemies.forEach(enemy => {
         drawTriangle(enemy.x, enemy.y, enemy.size, enemy.angle);
       });
-      // ƒpƒ‹ƒX“G•`‰æi‡‚Ì‰~jy•ÏX‰Â”\z
+      // ãƒ‘ãƒ«ã‚¹æ•µæç”»ï¼ˆç´«ã®å††ï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
       pulseEnemies.forEach(enemy => {
         ctx.save();
         ctx.beginPath();
@@ -898,7 +898,7 @@
         ctx.stroke();
         ctx.restore();
       });
-      // ƒXƒvƒ‰ƒbƒVƒ…“GƒOƒ‹[ƒv•`‰æF3‘Ì‚ğOŠpŒ`‚Ì’¸“_‚É”z’uy•ÏX‰Â”\z
+      // ã‚¹ãƒ—ãƒ©ãƒƒã‚·ãƒ¥æ•µã‚°ãƒ«ãƒ¼ãƒ—æç”»ï¼š3ä½“ã‚’ä¸‰è§’å½¢ã®é ‚ç‚¹ã«é…ç½®ã€å¤‰æ›´å¯èƒ½ã€‘
       splashGroups.forEach(group => {
         for(let i = 0; i < 3; i++){
           let angle = group.baseAngle + i * (2 * Math.PI / 3);
@@ -914,14 +914,14 @@
           ctx.restore();
         }
       });
-      // “G’e•`‰æiÔFjy•ÏX‰Â”\z
+      // æ•µå¼¾æç”»ï¼ˆèµ¤è‰²ï¼‰ã€å¤‰æ›´å¯èƒ½ã€‘
       ctx.fillStyle = "red";
       enemyBullets.forEach(bullet => {
         ctx.beginPath();
         ctx.arc(bullet.x, bullet.y, bullet.radius, 0, Math.PI * 2);
         ctx.fill();
       });
-      // ƒpƒ‹ƒX”g•`‰æy•ÏX‰Â”\z
+      // ãƒ‘ãƒ«ã‚¹æ³¢æç”»ã€å¤‰æ›´å¯èƒ½ã€‘
       pulseWaves.forEach(wave => {
         ctx.save();
         ctx.globalAlpha = wave.alpha;
@@ -932,17 +932,17 @@
         ctx.stroke();
         ctx.restore();
       });
-      // ”š”­ƒGƒtƒFƒNƒg•`‰æy•ÏX‰Â”\z
+      // çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»ã€å¤‰æ›´å¯èƒ½ã€‘
       explosions.forEach(exp => { exp.draw(ctx); });
-      // ƒXƒRƒAEƒ‰ƒCƒtEƒXƒe[ƒW•\¦y•ÏX‰Â”\z
+      // ã‚¹ã‚³ã‚¢ãƒ»ãƒ©ã‚¤ãƒ•ãƒ»ã‚¹ãƒ†ãƒ¼ã‚¸è¡¨ç¤ºã€å¤‰æ›´å¯èƒ½ã€‘
       ctx.fillStyle = "white";
       ctx.font = "20px sans-serif";
       ctx.textAlign = "left";
       ctx.fillText("Score: " + score, 10, 30);
       ctx.fillText("Life: " + player.life, 10, 60);
       ctx.fillText("Stage: " + stage, 10, 90);
-      // ƒ^ƒCƒ}[ƒQ[ƒW‚ğ‰E‘¤‚É•`‰æy•ÏX‰Â”\z
-      let blockHeight = 8; // 1ƒuƒƒbƒN‚Ì‚‚³y•ÏX‰Â”\z
+      // ã‚¿ã‚¤ãƒãƒ¼ã‚²ãƒ¼ã‚¸ã‚’å³å´ã«æç”»ã€å¤‰æ›´å¯èƒ½ã€‘
+      let blockHeight = 8; // 1ãƒ–ãƒ­ãƒƒã‚¯ã®é«˜ã•ã€å¤‰æ›´å¯èƒ½ã€‘
       let gaugeTotalHeight = 30 * blockHeight;
       let startY = (HEIGHT - gaugeTotalHeight) / 2;
       ctx.strokeStyle = "white";
@@ -951,7 +951,7 @@
       let currentHeight = timer * blockHeight;
       ctx.fillRect(WIDTH - 40, startY + (gaugeTotalHeight - currentHeight), 20, currentHeight);
 
-      // ƒfƒ‚ƒ‚[ƒh‚ÌƒƒbƒZ[ƒWy•ÏX‰Â”\z
+      // ãƒ‡ãƒ¢ãƒ¢ãƒ¼ãƒ‰æ™‚ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã€å¤‰æ›´å¯èƒ½ã€‘
       if(gameState === "demo") {
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
@@ -960,14 +960,14 @@
         ctx.font = "40px sans-serif";
         ctx.fillText("Push Space Key", WIDTH / 2, HEIGHT / 2);
       }
-      // ƒQ[ƒ€ƒI[ƒo[‚ÌƒƒbƒZ[ƒWy•ÏX‰Â”\z
+      // ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ™‚ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã€å¤‰æ›´å¯èƒ½ã€‘
       if(gameState === "gameover") {
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
         ctx.font = "40px sans-serif";
         ctx.fillText("Game Over", WIDTH / 2, HEIGHT / 2);
       }
-      // ƒXƒe[ƒWƒNƒŠƒA‚ÌƒƒbƒZ[ƒWy•ÏX‰Â”\z
+      // ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢æ™‚ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã€å¤‰æ›´å¯èƒ½ã€‘
       if(gameState === "playing" && paused && stageCleared) {
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
